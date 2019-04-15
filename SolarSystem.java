@@ -1,224 +1,344 @@
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+/*
+- Modelling the planetary system using the 4th order Yoshida integrator (an upgraded version of the leapfrog method).
+- The scale: distance = m, mass = kg, time = s, velocity = m/s, acceleration = m/s^2
 
+// Change the scale at line 247 to Math.pow(10,-10) to zoom out.
 
+*/
 public class SolarSystem {
-    static final double G = 0.000667;           //universal gravitational constant
-    ArrayList<Planet> list = new ArrayList<Planet>();
-    float timestep = 0.0f;
+	static final double G = 6.67408 * Math.pow(10,-11);;//universal gravitational constant
 
-    public SolarSystem(){
+	// Below are some constants needed for this method
+	static final double w0 = (-Math.pow(2,1/3))/(2-Math.pow(2,1/3));
+	static final double w1 = 1/(2-Math.pow(2,1/3));
+	static final double c1 = w1/2;
+	static final double c2 = (w0+w1)/2;
+	ArrayList<Planet> planetaryObjects = new ArrayList<Planet>();
+	float timestep=1000f;
 
-        Planet Sun = new Planet("Sun",19.89,0,0);
+	public SolarSystem(){
 
-        Planet Mercury = new Planet("Mercury",0.00000328,-4.6,0, 5.8,5.7);
+		Planet Sun = new Planet("Sun",1.989 *Math.pow(10,30),0,0,0,0);
 
-        Planet Venus = new Planet("Venus",0.0000487,-10.725,0,10.8,10.799);
+		Planet Earth = new Planet("Earth", 5.972*Math.pow(10,24), -149010862150.01596069, -2126396301.1637141705, -62.711922803909892821, -29884.912428149531479);
+		Planet Moon = new Planet("Moon", 7.34767309 *Math.pow(10,22), -149362685990.11404419, -2212378435.2487487793, 154.04965501127904304, -30946.618778578722413);
+		Planet Mars = new Planet("Mars",6.39 *Math.pow(10,23),23242872211.678588867,231499512113.57745361, -23192.796815354045975, 4479.3215975889943365);
+		Planet Phobos = new Planet("Phobos", 1.0659*Math.pow(10,16), 23236713780.293193817, 231493148759.69039917, -21904.085359357279231, 2922.1678946024862853);
+		Planet Deimos = new Planet("Deimos", 1.4762*Math.pow(10,15), 23260708397.058792114, 231513037031.97982788, -23865.346667643512774,5577.8591509278139711);
 
-        Planet Earth = new Planet("Earth",0.0000597, -14.745,0,15,14.99);
+		Planet Jupiter = new Planet("Jupiter",1.898 *Math.pow(10,27),-235672845845.29763794,-761001269458.0333252, 12333.612635551397034, -3252.7828483488401616);
+		Planet Io = new Planet("Io", 8.9319*Math.pow(10,22), -235534753847.68914795, -761398018637.74267578, 28776.872256098788057, 2415.5909830461550882);
+		Planet Europa = new Planet("Europa", 4.799844*Math.pow(10,22), -235707989708.32266235, -760337695952.91906738, -1510.9909273330456472, -3932.491101951766268);
+		Planet Ganymede = new Planet("Ganymede", 1.4819*Math.pow(10,23), -235779309153.56542969, -762063853242.70800781, 23178.548350762626796, -4323.7334045707193582);
+		Planet Callisto = new Planet("Callisto", 1.075938*Math.pow(10,23), -234831550521.73205566, -762679789117.9362793, 19662.909081447385688, 476.03519297275602185);
 
-        Planet Mars = new Planet("Mars",0.00000642,-20.66,0 ,22.8,22.7 );
-        Planet Jupiter = new Planet ("Jupiter", 0.019, -74.1,0,77.9,77.8);
-        Planet Saturn = new Planet("Saturn",0.00568, -134.8,0,143,48.8);
-        Planet Uranus = new Planet ("Uranus",0.000866, -273.8,0,287,286.7 );
-        Planet Neptune = new Planet ("Neptune",0.00103,-445,0,450,449.9);
+		Planet Saturn = new Planet("Saturn",5.683 *Math.pow(10,26),354759353240.08221436,-1461948830848.2719727, 8867.8273592403966177, 2247.0444129401830651);
+		Planet Tethys = new Planet("Tethys", 6.17449*Math.pow(10,20), 354785138137.6774292, -1461689707592.3195801, -2377.8867427412342295, 3679.1153207793140609);
+		Planet Mimas = new Planet("Mimas", 3.7493*Math.pow(10,19) , 354929590317.0680542, -1461896423417.3325195, 3225.8538016469460672, 14125.074214980997567);
+		Planet Enceladus = new Planet("Enceladus", 1.08022*Math.pow(10,20), 354799787341.86053467, -1462158801299.2456055, 21245.580993242823752, 3606.8459847855569933);
+		Planet Dione = new Planet("Dione", 1.095452*Math.pow(10,21) , 354460272013.53613281, -1462138333984.7424316, 14914.964853148958355, -5087.5637844324646721);
+		Planet Rhea = new Planet("Rhea", 2.306518*Math.pow(10,21) , 354440944762.03717041, -1461564720465.1967773, 2140.5542062106133017, -2053.6060807788026068);
+		Planet Titan = new Planet("Titan", 1.3452*Math.pow(10,23), 353742492774.33044434, -1462539028125.2316895, 12081.93089270526616, -1813.839579262785719);
 
+		Planet Uranus = new Planet("Uranus",8.681 *Math.pow(10,25) ,2520721625280.1430664,1570265330931.7612305, -3638.6056156374625061, 5459.4683505725070063);
+		Planet Neptune = new Planet("Neptune",1.024 *Math.pow(10,26), 4344787551365.7446289,-1083664718815.0178223, 1292.6328876547368054, 5305.0241404888956822);
 
-        list.add(Sun);
-        Sun.addChild(Mercury);
-        Sun.addChild(Venus);
-        Sun.addChild(Earth);
-        Sun.addChild(Mars);
-        Sun.addChild(Jupiter);
-        Sun.addChild(Saturn);
-        Sun.addChild(Uranus);
-        Sun.addChild(Neptune);
-
-        Planet Moon = new Planet("Moon", 0.00005, Earth.x-0.0051,0,0.0384,0.0192);
-        Earth.addChild(Moon);
-        Planet Phobos = new Planet("Phobos",0,Mars.x-0.0009,0,0.0009,0.0009);
-        Planet Deimos = new Planet("Deimos",0,Mars.x-0.0023,0,0.0023,0.0023);
-        Mars.addChild(Phobos);
-        Mars.addChild(Deimos);
-        Planet Io = new Planet("Io",0,Jupiter.x-0.042,0,0.042,0.042);
-        Planet Europa = new Planet("Europa",0,Jupiter.x-0.066,0,0.067,0.067);
-        Planet Ganymede = new Planet("Ganymede",0,Jupiter.x-0.1,0,0.1,0.1);
-        Planet Callisto = new Planet("Callisto", 0,Jupiter.x-0.187,0,0.188,0.188);
-        Jupiter.addChild(Io);
-        Jupiter.addChild(Europa);
-        Jupiter.addChild(Ganymede);
-        Jupiter.addChild(Callisto);
-        Planet Mimas = new Planet("Mimas", 0,Saturn.x-0.0185,0,0.0185,0.0185);
-        Planet Enceladus = new Planet("Enceladus",0,Saturn.x-0.0237,0,0.0238,0.0238);
-        Planet Tethys = new Planet("Tethys",0,Saturn.x-0.0295,0,0.0295,0.0295);
-        Planet Dion = new Planet("Dion",0,Saturn.x-0.0377,0,0.0377,0.0377);
-        Planet Rhea = new Planet("Rhea",0,Saturn.x-0.0526,0,0.0527,0.0527);
-        Planet Titan = new Planet("Titan",0,Saturn.x-0.12,0,0.12,0.12);
-        Planet Rapetus = new Planet("Rapetus",0,Saturn.x-0.35,0,0.36,0.36);
-        Saturn.addChild(Mimas);
-        Saturn.addChild(Enceladus);
-        Saturn.addChild(Tethys);
-        Saturn.addChild(Dion);
-        Saturn.addChild(Rhea);
-        Saturn.addChild(Titan);
-        Saturn.addChild(Rapetus);
-
-        /*
-        for (Planet i: list.get(0).childrenPlanets) {
-                i.x *= 10;
-                i.y *= 10;
-                i.a *= 10;
-                i.b *= 10;
-                for (Planet c: i.childrenPlanets) {
-                    c.x *=10;
-                    c.y *= 10;
-                    c.a *= 10;
-                    c.b *= 10;
-                }
-
-        } */
-
-    }
-
-    void updatePositions () {
-        for (Planet i: list) {
-            for(Planet child: i.childrenPlanets) {
-                if(!child.equals(null)) {
-
-            double n = Math.sqrt(G*(child.mass+i.mass)/(Math.pow(child.a,3)));
-            double M = n* timestep;
-            double e = Math.sqrt(1-child.b*child.b/(child.a*child.a));
-            double E = M;
-            for (int j = 0; j<10;j++) {
-                E = E+e*Math.sin(E);
-            }
-            child.x = child.a*(Math.cos(E)-e);
-            child.y = child.b*Math.sin(E);
-
-            for (Planet grandChild : child.childrenPlanets) {
-                if(!grandChild.equals(null)) {
-                    double nChild = Math.sqrt(G*(grandChild.mass+child.mass)/(Math.pow(grandChild.a,3)));
-                    double MChild = nChild* timestep;
-                    double eChild = Math.sqrt(1-grandChild.b*grandChild.b/(grandChild.a*grandChild.a));
-                    double EChild = MChild;
-                    for (int k = 0; k<10;k++) {
-                        EChild = EChild+eChild*Math.sin(EChild);
-                    }
-                    grandChild.x = grandChild.a*(Math.cos(EChild)-eChild);
-                    grandChild.y = grandChild.b*Math.sin(EChild);
-                    //System.out.println(grandChild.name);
-                    //System.out.println(grandChild.x);
-                    //System.out.println(grandChild.y);
-                }
-
-            }
-                }
-
-        }
-
-        }
-
-    }
+		Planet Mercury = new Planet("Mercury", 3.3011*Math.pow(10,23),-58432374622.839942932,-21437816633.49621582, 6693.4979641187965171, -43627.083379485586192);
+		Planet Venus = new Planet("Venus",4.8675*Math.pow(10,24),-2580458154.9969267845,-108701123911.93000793, 34777.284216476567963, -961.21239989254672764);
 
 
-        /*
-    void updatePositions(){
-        for (Planet p:list) {
-            if (p.name!= Sun.name) {
-        for (Planet i: list) {
-            if (i.name != p.name) {
-        p.FX += G*(p.mass*i.mass)*(i.x-p.x)/((Math.pow((Math.sqrt(Math.pow(p.x-i.x,2)+Math.pow(p.y-i.y,2))),3)));
-        p.FY += G*(p.mass*i.mass)*(i.y-p.y)/((Math.pow((Math.sqrt(Math.pow(p.x-i.x,2)+Math.pow(p.y-i.y,2))),3)));
-            }
-        }
-        p.accX = p.FX/p.mass;
-        p.accY = p.FY/p.mass;
-        System.out.println(p.accX);
-        System.out.println(p.accY);
-        p.x += p.velX*timestep;
-        p.y +=p.velY*timestep;
-        p.velX+= p.accX*timestep;
-        p.velY+= p.accY*timestep;
-        p.FX = 0;
-        p.FY = 0; } }
-
-} */
 
 
+		planetaryObjects = new ArrayList<Planet>();
+		planetaryObjects.add(Sun);
+		planetaryObjects.add(Mars);
+		planetaryObjects.add(Phobos);
+		planetaryObjects.add(Deimos);
+
+		planetaryObjects.add(Earth);
+		planetaryObjects.add(Moon);
+
+		planetaryObjects.add(Jupiter);
+		planetaryObjects.add(Io);
+		planetaryObjects.add(Europa);
+		planetaryObjects.add(Ganymede);
+		planetaryObjects.add(Callisto);
+
+		planetaryObjects.add(Saturn);
+		planetaryObjects.add(Tethys);
+		planetaryObjects.add(Mimas);
+		planetaryObjects.add(Enceladus);
+		planetaryObjects.add(Dione);
+		planetaryObjects.add(Rhea);
+		planetaryObjects.add(Titan);
+
+
+		planetaryObjects.add(Uranus);
+
+		planetaryObjects.add(Neptune);
+
+		planetaryObjects.add(Mercury);
+
+		planetaryObjects.add(Venus);
+
+		
+
+	}
+
+	void firstUpdate() {
+		for (int i=0;i<planetaryObjects.size();i++) {
+			// x_i_1 = x_i + c1*v_i*timestep
+			planetaryObjects.get(i).oldX =planetaryObjects.get(i).x+ timestep * c1*planetaryObjects.get(i).velX;
+			planetaryObjects.get(i).oldY =planetaryObjects.get(i).y+ timestep * c1*planetaryObjects.get(i).velY;
+
+		}
+	}
+	void secondUpdate() {
+
+		// a -> a(x_i_1)
+		double dx, dy, dz, D, A;
+
+		for (int i = 0; i < planetaryObjects.size(); i++) {
+
+			planetaryObjects.get(i).accX = 0;
+			planetaryObjects.get(i).accY = 0;
+
+				for (int j = 0; j < planetaryObjects.size(); j++) {
+					if (i != j) {
+						dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
+						dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
+						D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+						A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+						planetaryObjects.get(i).accX += dx * A / D;
+						planetaryObjects.get(i).accY += dy * A / D;
+					}
+				}
+
+		}
+
+	}
+	void thirdUpdate()
+			// v_i_1 = v_i+ w1*a*timestep
+	{
+		for(int i=0; i<planetaryObjects.size();i++)
+		{
+			planetaryObjects.get(i).velX+= w1*planetaryObjects.get(i).accX*timestep;
+			planetaryObjects.get(i).velY+= w1*planetaryObjects.get(i).accY*timestep;
+		}
+	}
+
+	void fourthUpdate() {
+		for (int i=0;i<planetaryObjects.size();i++) {
+			// x_i_2 = x_i_1 + c2*v_i_1*timestep
+			planetaryObjects.get(i).oldX += timestep * c2*planetaryObjects.get(i).velX;
+			planetaryObjects.get(i).oldY += timestep * c2*planetaryObjects.get(i).velY;
+
+		}
+	}
+
+	void fifthUpdate() {
+
+		// update a -> a(x_i_2)
+		double dx, dy, dz, D, A;
+
+		for (int i = 0; i < planetaryObjects.size(); i++) {
+
+			planetaryObjects.get(i).accX = 0;
+			planetaryObjects.get(i).accY = 0;
+
+			for (int j = 0; j < planetaryObjects.size(); j++) {
+				if (i != j) {
+					dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
+					dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
+					D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+					A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+					planetaryObjects.get(i).accX += dx * A / D;
+					planetaryObjects.get(i).accY += dy * A / D;
+				}
+			}
+
+		}
+	}
+
+	void sixthUpdate() {
+
+		// v_i_2 = v_i_1+ w0*a*timestep
+		for(int i=0; i<planetaryObjects.size();i++)
+		{
+			planetaryObjects.get(i).velX+= w0*planetaryObjects.get(i).accX*timestep;
+			planetaryObjects.get(i).velY+= w0*planetaryObjects.get(i).accY*timestep;
+		}
+	}
+
+	void seventhUpdate() {
+		for (int i=0;i<planetaryObjects.size();i++) {
+			// x_i_3 = x_i_2 + c2*v_i_2*timestep
+			planetaryObjects.get(i).oldX += timestep * c2*planetaryObjects.get(i).velX;
+			planetaryObjects.get(i).oldY += timestep * c2*planetaryObjects.get(i).velY;
+
+		}
+	}
+	void eightUpdate() {
+		// a -> a(x_i_3)
+		double dx, dy, dz, D, A;
+
+		for (int i = 0; i < planetaryObjects.size(); i++) {
+
+			planetaryObjects.get(i).accX = 0;
+			planetaryObjects.get(i).accY = 0;
+
+			for (int j = 0; j < planetaryObjects.size(); j++) {
+				if (i != j) {
+					dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
+					dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
+					D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+					A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+					planetaryObjects.get(i).accX += dx * A / D;
+					planetaryObjects.get(i).accY += dy * A / D;
+				}
+			}
+
+		}
+
+	}
+	void ninethUpdate() {
+		// v_i_3 = v_i_2 + w1*a*timestep
+		for(int i=0; i<planetaryObjects.size();i++)
+		{
+			planetaryObjects.get(i).velX+= w1*planetaryObjects.get(i).accX*timestep;
+			planetaryObjects.get(i).velY+= w1*planetaryObjects.get(i).accY*timestep;
+		}
+	}
+
+	void move() {
+		// x_(i+1) = x_i_3 + c1*v_i_3*timestep;
+		for (int i=0;i<planetaryObjects.size();i++) {
+			planetaryObjects.get(i).x = planetaryObjects.get(i).oldX+ timestep * c1*planetaryObjects.get(i).velX;
+			planetaryObjects.get(i).y = planetaryObjects.get(i).oldY+ timestep * c1*planetaryObjects.get(i).velY;
+
+		}
+	}
+	void updatePositions(){
+		firstUpdate();
+		secondUpdate();
+		thirdUpdate();
+		fourthUpdate();
+		fifthUpdate();
+		sixthUpdate();
+		seventhUpdate();
+		eightUpdate();
+		ninethUpdate();
+		move();
+	}
 }
 
 
-class SolarGUI extends JPanel implements Runnable{
-    int offX=400, offY=400;
-    double scale=20;
-    SolarSystem s;
-    public SolarGUI(){
-        s = new SolarSystem();
-        setFocusable(true);
-        requestFocus();
-    }
+class SolarGUI extends JPanel implements Runnable , MouseMotionListener, MouseListener, KeyListener{
+	int offX=600, offY=600;
+	int oldOffX=600, oldOffY=600;
+	double scale=5*Math.pow(10,-10);
+	int fstClickX, fstClickY;
+	SolarSystem s;
+	public SolarGUI(){
+		s = new SolarSystem();
+		setFocusable(true);
+	    requestFocus();
+	    addMouseMotionListener(this);
+		addMouseListener(this);
+		addKeyListener(this);
+	}
 
-    public void paintComponent(Graphics g) {
-        int i=0;
-        int diameter=20;
-        double centraY = s.list.get(0).y;
-        double centraX = s.list.get(0).x;
-        int xSun = (int)(offX-diameter/2+centraX*scale);
-        int ySun = (int)(offY-diameter/2+centraY*scale);
-        g.fillOval(xSun, ySun,diameter,diameter);
-        for(Planet p : s.list.get(0).childrenPlanets){
+	public void paintComponent(Graphics g) {
+		int i=0;
+		int diameter=15;
+		for(Planet p : s.planetaryObjects){
+			if(i!=0) diameter=5;
+			int x = (int)(offX-diameter/2+p.x*scale);
+			int y = (int)(offY-diameter/2+p.y*scale);
+			g.fillOval(x, y,diameter,diameter);
+			g.drawString(p.name, x, y);
+			i++;
+		}
+	}
 
-            diameter=10;
-            int x = (int)(offX-diameter/2+p.x*scale);
-            int y = (int)(offY-diameter/2+p.y*scale);
-            g.fillOval(x, y,diameter,diameter);
-            //g.drawString(p.name, x, y);
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		while(true){
+			s.updatePositions();
+			repaint();
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	public static void main(String[] args) {
+		JFrame f = new JFrame("Solar System");
+		f.setBounds(0, 0, 1200, 1200);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-			/*for(int k=1; k<p.positions.size(); k++){
-				Point pt0 = p.positions.get(k-1);
-				Point pt1 = p.positions.get(k);
-				g.drawLine((int)(offX+pt0.x*scale), (int)(offY+pt0.y*scale), (int)(offX+pt1.x*scale), (int)(offY+pt1.y*scale));
-			}*/
+		SolarGUI p = new SolarGUI();
+		f.add(p);
+		new Thread(p).start();
+		f.setVisible(true);
 
-			for (Planet c: p.childrenPlanets) {
-			    if(!c.equals(null)) {
-                    diameter = 0;
-                    x = (int) (offX - diameter / 2 + c.x * scale);
-                    y = (int) (offY - diameter / 2 + c.y * scale);
-                    g.fillOval(x, y, diameter, diameter);
+	}
 
-                }
-            }
-        }
-    }
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		offX=oldOffX+e.getX()-fstClickX;
+		offY=oldOffY+e.getY()-fstClickY;
+	}
 
-    @Override
-    public void run() {
-        // TODO Auto-generated method stub
-        while(true){
-            s.timestep+=20;
-            s.updatePositions();
-            repaint();
-            try {
-                Thread.sleep(10);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }
-    public static void main(String[] args) {
-        JFrame f = new JFrame("Solar system");
-        f.setBounds(0, 0, 8000, 8000);
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	@Override
+	public void mouseMoved(MouseEvent e) {}
 
-        SolarGUI p = new SolarGUI();
-        f.add(p);
-        new Thread(p).start();
-        f.setVisible(true);
-    }
+	@Override
+	public void mouseClicked(MouseEvent e) {}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		 fstClickX=e.getX();
+		 fstClickY=e.getY();
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		oldOffX=offX;
+		oldOffY=offY;
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {}
+
+	@Override
+	public void mouseExited(MouseEvent e) {}
+
+	@Override
+	public void keyTyped(KeyEvent e) {}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.getKeyChar()=='q') scale+=2.1;
+		if(e.getKeyChar()=='a') scale-=2.1;
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {}
 }
+
+
 
