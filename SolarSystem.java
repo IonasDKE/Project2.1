@@ -8,6 +8,17 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import javafx.animation.Interpolator;
+import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.scene.shape.Ellipse;
+import javafx.scene.shape.Sphere;
+import javafx.stage.Stage;
+import javafx.util.Duration;
 /*
 - Modelling the planetary system using the 4th order Yoshida integrator (an upgraded version of the leapfrog method).
 - The scale: distance = m, mass = kg, time = s, velocity = m/s, acceleration = m/s^2
@@ -24,7 +35,7 @@ public class SolarSystem {
 	static final double c1 = w1/2;
 	static final double c2 = (w0+w1)/2;
 	ArrayList<Planet> planetaryObjects = new ArrayList<Planet>();
-	float timestep=1000f;
+	float timestep=10f;
 
 	public SolarSystem(){
 
@@ -241,104 +252,5 @@ public class SolarSystem {
 		move();
 	}
 }
-
-
-class SolarGUI extends JPanel implements Runnable , MouseMotionListener, MouseListener, KeyListener{
-	int offX=600, offY=600;
-	int oldOffX=600, oldOffY=600;
-	double scale=5*Math.pow(10,-10);
-	int fstClickX, fstClickY;
-	SolarSystem s;
-	public SolarGUI(){
-		s = new SolarSystem();
-		setFocusable(true);
-	    requestFocus();
-	    addMouseMotionListener(this);
-		addMouseListener(this);
-		addKeyListener(this);
-	}
-
-	public void paintComponent(Graphics g) {
-		int i=0;
-		int diameter=15;
-		for(Planet p : s.planetaryObjects){
-			if(i!=0) diameter=5;
-			int x = (int)(offX-diameter/2+p.x*scale);
-			int y = (int)(offY-diameter/2+p.y*scale);
-			g.fillOval(x, y,diameter,diameter);
-			g.drawString(p.name, x, y);
-			i++;
-		}
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		while(true){
-			s.updatePositions();
-			repaint();
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-	}
-	public static void main(String[] args) {
-		JFrame f = new JFrame("Solar System");
-		f.setBounds(0, 0, 1200, 1200);
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		SolarGUI p = new SolarGUI();
-		f.add(p);
-		new Thread(p).start();
-		f.setVisible(true);
-
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		offX=oldOffX+e.getX()-fstClickX;
-		offY=oldOffY+e.getY()-fstClickY;
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {}
-
-	@Override
-	public void mouseClicked(MouseEvent e) {}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		 fstClickX=e.getX();
-		 fstClickY=e.getY();
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		oldOffX=offX;
-		oldOffY=offY;
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {}
-
-	@Override
-	public void mouseExited(MouseEvent e) {}
-
-	@Override
-	public void keyTyped(KeyEvent e) {}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if(e.getKeyChar()=='q') scale+=2.1;
-		if(e.getKeyChar()=='a') scale-=2.1;
-	}
-
-	@Override
-	public void keyReleased(KeyEvent e) {}
-}
-
 
 
