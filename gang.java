@@ -5,6 +5,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.Scene;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
+import javafx.scene.shape.Polygon;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -13,7 +14,6 @@ import javafx.scene.PerspectiveCamera;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
-
 import java.util.ArrayList;
 
 public class gang extends Application{
@@ -31,6 +31,13 @@ public class gang extends Application{
 
 		makePlanets();
 
+		Polygon rocket = new Polygon();
+        rocket.getPoints().addAll(new Double[]{
+            0.0, 0.0,
+            20.0, 10.0,
+            10.0, 20.0 });
+        rocket.setFill(Color.RED);
+
 		Timeline timeline = new Timeline(
 				new KeyFrame(Duration.millis(20), t -> {
 					//Put here the code which is supposed to be repeated(or check the x,y coordinates and decide when to thrust)
@@ -47,6 +54,7 @@ public class gang extends Application{
 
 		Group root = new Group();
 		root.getChildren().addAll(planets);
+		root.getChildren().addAll(rocket);
 
 
 		Scene scene = new Scene(root, 1200, 1200);
