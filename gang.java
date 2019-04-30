@@ -19,7 +19,7 @@ import java.util.ArrayList;
 public class gang extends Application{
 	int offX=600, offY=600;
 	int oldOffX=600, oldOffY=600;
-	double scale=10*Math.pow(10,-8);
+	double scale=10*Math.pow(10,-10);
 	int fstClickX, fstClickY;
 	SolarSystem s = new SolarSystem();
 	int zoommax=0;
@@ -71,13 +71,30 @@ public class gang extends Application{
                     zoommax=zoommax-500;
                     break;
                 case T:
-                	
+                	scale=10*Math.pow(10,-8);
                 	offX=600-(int)(diameter/2+s.planetaryObjects.get(11).x*scale);
 					offY=600-(int)(diameter/2+s.planetaryObjects.get(11).y*scale);
-					camera.translateZProperty().set(1930);
-					diameter=0.1;
+					camera.translateZProperty().set(500);
 					oldOffX=offX;
 					oldOffY=offY;
+					break;
+
+				case S:
+                	scale=10*Math.pow(10,-10);
+                	offX=600;
+					offY=600;
+					camera.translateZProperty().set(500);
+					oldOffX=offX;
+					oldOffY=offY;
+					break;
+				case E:
+                	scale=10*Math.pow(10,-8);
+                	offX=600-(int)(diameter/2+s.planetaryObjects.get(4).x*scale);
+					offY=600-(int)(diameter/2+s.planetaryObjects.get(4).y*scale);
+					camera.translateZProperty().set(500);
+					oldOffX=offX;
+					oldOffY=offY;
+					break;
 			}
         });
 
@@ -107,6 +124,9 @@ public class gang extends Application{
 	}
 
 	public void makePlanets () {
+
+		planets.clear();
+
 		for(Planet p : s.planetaryObjects)
 		{
 			Sphere planet = new Sphere();
