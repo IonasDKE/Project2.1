@@ -32,11 +32,24 @@ public class gang extends Application{
 		makePlanets();
 
 		Polygon rocket = new Polygon();
+		double xModule = offX-diameter/2+s.planetaryObjects.get(4).x*scale;
+		double yModule = offY-diameter/2+s.planetaryObjects.get(4).y*scale;
+		double xModuleLeft = offX-diameter/2+s.planetaryObjects.get(4).x*scale+10;
+		double yModuleLeft = offY-diameter/2+s.planetaryObjects.get(4).y*scale+20;
+		double xModuleRight = offX-diameter/2+s.planetaryObjects.get(4).x*scale+20;
+		double yModuleRight = offY-diameter/2+s.planetaryObjects.get(4).y*scale+10;
+		System.out.println(yModuleLeft);
+		System.out.println(yModuleRight);
+
+
         rocket.getPoints().addAll(new Double[]{
-            0.0, 0.0,
-            20.0, 10.0,
-            10.0, 20.0 });
+            xModule, yModule,
+            xModuleRight, yModuleRight,
+            xModuleLeft, yModuleLeft });
         rocket.setFill(Color.RED);
+
+        rocket.setTranslateY(10);
+
 
 		Timeline timeline = new Timeline(
 				new KeyFrame(Duration.millis(20), t -> {
