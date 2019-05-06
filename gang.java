@@ -93,28 +93,22 @@ public class gang extends Application{
                     break;
                 case T:
                 	scale=10*Math.pow(10,-8);
-                	offX=600-(int)(diameter/2+s.planetaryObjects.get(11).x*scale);
-					offY=600-(int)(diameter/2+s.planetaryObjects.get(11).y*scale);
+                	camera.translateXProperty().set((int)(diameter/2+s.planetaryObjects.get(11).x*scale));
+                	camera.translateYProperty().set((int)(diameter/2+s.planetaryObjects.get(11).y*scale));
 					camera.translateZProperty().set(500);
-					oldOffX=offX;
-					oldOffY=offY;
 					break;
 
 				case S:
                 	scale=10*Math.pow(10,-10);
-                	offX=600;
-					offY=600;
+                	camera.translateXProperty().set(0);
+                	camera.translateYProperty().set(0);
 					camera.translateZProperty().set(500);
-					oldOffX=offX;
-					oldOffY=offY;
 					break;
 				case E:
                 	scale=10*Math.pow(10,-8);
-                	offX=600-(int)(diameter/2+s.planetaryObjects.get(4).x*scale);
-					offY=600-(int)(diameter/2+s.planetaryObjects.get(4).y*scale);
+                	camera.translateXProperty().set((int)(diameter/2+s.planetaryObjects.get(4).x*scale));
+                	camera.translateYProperty().set((int)(diameter/2+s.planetaryObjects.get(4).y*scale));
 					camera.translateZProperty().set(500);
-					oldOffX=offX;
-					oldOffY=offY;
 					break;
 			}
         });
@@ -122,19 +116,15 @@ public class gang extends Application{
 
         primaryStage.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> { 
                 fstClickX=(int)(event.getX());
+                System.out.println(fstClickX);
 		 		fstClickY=(int)(event.getY());
             
         });
 
-         primaryStage.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> { 
-                oldOffX=offX;
-				oldOffY=offY;
-            
-        });
 
          primaryStage.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> { 
-                offX=oldOffX+(int)(event.getX())-fstClickX;
-				offY=oldOffY+(int)(event.getY())-fstClickY;
+                camera.translateXProperty().set(-(((int)(event.getX())-camera.getTranslateX())-fstClickX));
+				camera.translateYProperty().set(-(((int)(event.getY())-camera.getTranslateY())-fstClickY));
             
         });
      	
