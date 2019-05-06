@@ -74,6 +74,7 @@ public class gang extends Application{
 		scene.setFill(Color.BLACK);
 
 		Camera camera = new PerspectiveCamera(false);
+<<<<<<< HEAD
      	scene.setCamera(camera);
 
      	camera.translateZProperty().set(-500);
@@ -95,22 +96,58 @@ public class gang extends Application{
                 	scale=10*Math.pow(10,-8);
                 	camera.translateXProperty().set((int)(diameter/2+s.planetaryObjects.get(11).x*scale));
                 	camera.translateYProperty().set((int)(diameter/2+s.planetaryObjects.get(11).y*scale));
+=======
+		scene.setCamera(camera);
+
+		camera.translateZProperty().set(-500);
+		//camera.setNearClip(1);
+		camera.setFarClip(5000);
+
+		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
+			switch (event.getCode()) {
+				case Q:
+					if (zoommax<1930){
+						camera.translateZProperty().set(camera.getTranslateZ() + 500);
+						zoommax=zoommax+500;}
+					break;
+				case A:
+					camera.translateZProperty().set(camera.getTranslateZ() - 500);
+					zoommax=zoommax-500;
+					break;
+				case T:
+					scale=10*Math.pow(10,-8);
+					offX=600-(int)(diameter/2+s.planetaryObjects.get(11).x*scale);
+					offY=600-(int)(diameter/2+s.planetaryObjects.get(11).y*scale);
+>>>>>>> 51f672f7dce8f43a38c3f9552206bed606924432
 					camera.translateZProperty().set(500);
 					break;
 
 				case S:
+<<<<<<< HEAD
                 	scale=10*Math.pow(10,-10);
                 	camera.translateXProperty().set(0);
                 	camera.translateYProperty().set(0);
+=======
+					scale=10*Math.pow(10,-10);
+					offX=600;
+					offY=600;
+>>>>>>> 51f672f7dce8f43a38c3f9552206bed606924432
 					camera.translateZProperty().set(500);
 					break;
 				case E:
+<<<<<<< HEAD
                 	scale=10*Math.pow(10,-8);
                 	camera.translateXProperty().set((int)(diameter/2+s.planetaryObjects.get(4).x*scale));
                 	camera.translateYProperty().set((int)(diameter/2+s.planetaryObjects.get(4).y*scale));
+=======
+					scale=10*Math.pow(10,-8);
+					offX=600-(int)(diameter/2+s.planetaryObjects.get(4).x*scale);
+					offY=600-(int)(diameter/2+s.planetaryObjects.get(4).y*scale);
+>>>>>>> 51f672f7dce8f43a38c3f9552206bed606924432
 					camera.translateZProperty().set(500);
 					break;
 			}
+<<<<<<< HEAD
         });
 
 
@@ -132,6 +169,33 @@ public class gang extends Application{
         primaryStage.setTitle("SolarSystem");
         primaryStage.setScene(scene);
         primaryStage.show();
+=======
+		});
+
+
+		primaryStage.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+			fstClickX=(int)(event.getX());
+			fstClickY=(int)(event.getY());
+
+		});
+
+		primaryStage.addEventHandler(MouseEvent.MOUSE_RELEASED, event -> {
+			oldOffX=offX;
+			oldOffY=offY;
+
+		});
+
+		primaryStage.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
+			offX=oldOffX+(int)(event.getX())-fstClickX;
+			offY=oldOffY+(int)(event.getY())-fstClickY;
+
+		});
+
+
+		primaryStage.setTitle("SolarSystem");
+		primaryStage.setScene(scene);
+		primaryStage.show();
+>>>>>>> 51f672f7dce8f43a38c3f9552206bed606924432
 	}
 
 	public void makePlanets () {
@@ -140,17 +204,19 @@ public class gang extends Application{
 
 		for(Planet p : s.planetaryObjects)
 		{
-			Sphere planet = new Sphere();
-			planet.setTranslateX((int)(offX-diameter/2+p.x*scale));
-			planet.setTranslateY((int)(offY-diameter/2+p.y*scale));
-			planet.setRadius(diameter);
-			//System.out.println(planet.getCenterX() + " " +  planet.getCenterY());
+			if(p.name!="Lander") {
+				Sphere planet = new Sphere();
+				planet.setTranslateX((int) (offX - diameter / 2 + p.x * scale));
+				planet.setTranslateY((int) (offY - diameter / 2 + p.y * scale));
+				planet.setRadius(diameter);
+				//System.out.println(planet.getCenterX() + " " +  planet.getCenterY());
 
-			planets.add(planet);
+				planets.add(planet);
+			}
 		}
 	}
 
-	
+
 	public static void main(String[] args) {
 		launch(args);
 

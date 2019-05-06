@@ -35,7 +35,7 @@ public class SolarSystem {
 	static final double c1 = w1/2;
 	static final double c2 = (w0+w1)/2;
 	ArrayList<Planet> planetaryObjects = new ArrayList<Planet>();
-	float timestep=10f;
+	static float timestep=10f;
 
 	public SolarSystem(){
 
@@ -67,6 +67,7 @@ public class SolarSystem {
 		Planet Mercury = new Planet("Mercury", 3.3011*Math.pow(10,23),-58432374622.839942932,-21437816633.49621582, 6693.4979641187965171, -43627.083379485586192);
 		Planet Venus = new Planet("Venus",4.8675*Math.pow(10,24),-2580458154.9969267845,-108701123911.93000793, 34777.284216476567963, -961.21239989254672764);
 
+		LandingModule Lander = new LandingModule("Lander", 309, 353742492774.33044434, -1462539028125.2316895+2500+2000, 12081.93089270526616, -1813.839579262785719);
 
 
 
@@ -102,7 +103,7 @@ public class SolarSystem {
 
 		planetaryObjects.add(Venus);
 
-		
+		planetaryObjects.add(Lander);
 
 	}
 
@@ -251,6 +252,7 @@ public class SolarSystem {
 		ninethUpdate();
 		move();
 	}
+
 }
 
 
