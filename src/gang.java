@@ -25,7 +25,7 @@ public class gang extends Application{
 	int fstClickX, fstClickY;
 	SolarSystem s = new SolarSystem();
 	int zoommax=0;
-	double diameter=5;
+	double diameter=10;
 	ArrayList<Sphere> planets = new ArrayList<Sphere>();
 	
 	@Override
@@ -55,8 +55,8 @@ public class gang extends Application{
 
 					s.updatePositions();
 
-					rocket.setTranslateX(offX-diameter/2+s.planetaryObjects.get(1).x*scale);
-					rocket.setTranslateY(offY-diameter/2+s.planetaryObjects.get(1).y*scale);
+					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
+					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);
 
 					for(int j=0;j<planets.size();j++)
 					{
