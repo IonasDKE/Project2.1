@@ -11,7 +11,7 @@ class Point{
 
 public class Planet {
 	String name;
-	double mass, x, y, velX, velY, afelio, accX, accY, oldAccX, oldAccY;
+	double mass, x, y, velX, velY, accX, accY, oldAccX, oldAccY,oldX,oldY;
 	LinkedList<Point> positions = new LinkedList<Point>();
 	final int MAX_NUM_POINTS = 1000;
 	
@@ -26,6 +26,8 @@ public class Planet {
 		this.accY=0;
 		this.oldAccX=0;
 		this.oldAccY=0;
+		this.oldX = 0;
+		this.oldY=0;
 		positions.add(new Point(x,y));
 	}
 	public Planet(double mass, double x, double y){
