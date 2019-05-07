@@ -56,6 +56,7 @@ public class gang extends Application{
 					s.updatePositions();
 
 					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
+					//test
 					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);
 
 					for(int j=0;j<planets.size();j++)
