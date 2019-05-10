@@ -35,7 +35,7 @@ public class SolarSystem {
 	static final double c1 = w1/2;
 	static final double c2 = (w0+w1)/2;
 	ArrayList<Planet> planetaryObjects = new ArrayList<Planet>();
-	static float timestep=10f;
+	static float timestep=1f;
 
 	public SolarSystem(){
 

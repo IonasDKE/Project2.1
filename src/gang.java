@@ -9,6 +9,8 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.Polygon;
 import javafx.scene.paint.Color;
+import javafx.scene.transform.Affine;
+import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Camera;
@@ -19,6 +21,7 @@ import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
+import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 public class gang extends Application{
@@ -29,13 +32,17 @@ public class gang extends Application{
 	SolarSystem s = new SolarSystem();
 	int zoommax=0;
 	double diameter=10;
+
+	//testing variable
+	int i=0;
+
 	ArrayList<Sphere> planets = new ArrayList<Sphere>();
 
 	@Override
 	public void start(Stage primaryStage) {
 
 		makePlanets();
-
+		LandingModule rocketControler = (LandingModule)s.planetaryObjects.get(1);
 		Polygon rocket = new Polygon();
 		double xModule = (int)(offX-diameter/2+s.planetaryObjects.get(1).x*scale);
 		double yModule = (int)(offY-diameter/2+s.planetaryObjects.get(1).y*scale);
@@ -54,11 +61,16 @@ public class gang extends Application{
 		Timeline timeline = new Timeline(
 				new KeyFrame(Duration.millis(2), t -> {
 					//Put here the code which is supposed to be repeated(or check the x,y coordinates and decide when to thrust)
-					if(sqrt((s.planetaryObjects.get(1).y-s.planetaryObjects.get(0).y)*(s.planetaryObjects.get(1).y-s.planetaryObjects.get(0).y)+
-							(s.planetaryObjects.get(1).x-s.planetaryObjects.get(0).x)*(s.planetaryObjects.get(1).x-s.planetaryObjects.get(0).x))<=2500000)
+
+					s.updatePositions();
+
+					double dx = s.planetaryObjects.get(0).x - s.planetaryObjects.get(1).x;
+					double dy = s.planetaryObjects.get(0).y - s.planetaryObjects.get(1).y;
+					double D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+					if(D<=2500400)
 					{
-						System.out.println(s.planetaryObjects.get(1).velX + " " + s.planetaryObjects.get(1).velY);
-						System.out.println(s.planetaryObjects.get(1).x + " " + s.planetaryObjects.get(1).y);
+						System.out.println(/*s.planetaryObjects.get(1).velX + " " + */s.planetaryObjects.get(1).velY);
+						//System.out.println(s.planetaryObjects.get(1).x + " " + s.planetaryObjects.get(1).y);
 						try
 						{
 							Thread.sleep(20000);
@@ -68,7 +80,11 @@ public class gang extends Application{
 							Thread.currentThread().interrupt();
 						}
 					}
-					s.updatePositions();
+
+					//rocketControler.rightThrust();
+					//rocketControler.leftThrust();
+					rocketControler.mainThrust();
+
 
 					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
 					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);
