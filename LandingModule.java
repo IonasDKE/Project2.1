@@ -17,37 +17,32 @@ public class LandingModule extends Planet{
     }
 
     //reference for the power of the thrusters
-    public static void leftThrust()
+    public void leftThrust()
     {
         //add fuel consumption
-        int angle=5;
-        return angle;
+        angle +=1;
 
         //rotation around the barycenter (in this case the point where the gravitational forces and thrusts are applied)
         //rocket.transform(new Affine(new Rotate(s.planetaryObjects.get(22).leftThrust, xModule, yModule)));
-
     }
 
-    public static void rightThrust()
+    public void rightThrust()
     {
         //add fuel consumption
-        int angle=5;
-        return angle;
+        angle -= 1;
     }
 
     public void mainThrust()
     {
         //add fuel consumption
         double a =440/mass;
-        velY=velY+a*SolarSystem.timestep;
+        this.velY= this.velY+a*timeStep;
     }
 
-
-    //thrust the side thruster if it's going out of is direction
+    final double timestep = 0.1;
     public void thrust(){
 
-        int toThrust = check(module);
-        double a =440/module.mass;
+        int toThrust = check();
 
         if (toThrust == 1){
             rightThrust();
@@ -55,34 +50,36 @@ public class LandingModule extends Planet{
         }else if (toThrust == 2){
             leftThrust();
         }
+        reduceSpeedForLanding();
     }
 
-
-    //Need to get the position of Titan
-    Point p = new Point(SolarSystem.Titan.x, SolarSystem.Titan.y);
     public int check(){
-        final double DERIVATION = 2;
+        final Point TitanPosition = new Point(0,0);
+        final double DERIVATION = 1;
         final double STARTING_ANGLE = 0;
-        Point modulePosition = new Point(module.x, module.y);
-        if (this.getAngle(p) > STARTING_ANGLE + DERIVATION)
-            //rigth side
+        Point modulePosition = new Point(this.x, this.y);
+
+        if (modulePosition.getAngle(TitanPosition) > STARTING_ANGLE + DERIVATION) {
+            //Need to thrust rigth
             return 1;
-        else if (this.getAngle(p) < STARTING_ANGLE + DERIVATION)
-            //left side
+        }
+        else if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE + DERIVATION) {
+            //Need to thrust left
             return 2;
-        else
+        }
+        else {
             return 0;
+        }
     }
 
     public void reduceSpeedForLanding(){
         final double LANDING_SPEED = 0.5;
         final double DISTANCE_WHEN_NEED_TO_REDUCE_SPEED = 300;
-        double a =440/module.mass;
 
-        //thrust the main thruster to reduce speed, don't change angle of landing
-        if (module.getDistanceFromTitan() < DISTANCE_WHEN_NEED_TO_REDUCE_SPEED){
-            if (module.velY() > LANDING_SPEED){
-                module.velY= module.velY+a*SolarSystem.timestep;
+        //thrust the main thruster to reduce speed, does not change the angle
+        if (this.x < DISTANCE_WHEN_NEED_TO_REDUCE_SPEED){
+            if (this.velY() > LANDING_SPEED){
+                this.velY = this.velY+a*timestep;
             }
         }
     }
