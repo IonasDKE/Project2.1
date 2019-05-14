@@ -132,8 +132,13 @@ public class SolarSystem {
 							dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
 							dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
 							D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-							A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
-							//A = 1.352;
+							if(planetaryObjects.get(i).name=="Lander")
+							{
+								A = 1.352;
+							} else {
+								A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+							}
+
 							planetaryObjects.get(i).accX += dx * A / D;
 							planetaryObjects.get(i).accY += dy * A / D;
 
@@ -177,8 +182,12 @@ public class SolarSystem {
 					dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
 					dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
 					D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-					A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
-					//A = 1.352;
+					if(planetaryObjects.get(i).name=="Lander")
+							{
+								A = 1.352;
+							} else {
+								A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+							}
 					planetaryObjects.get(i).accX += dx * A / D;
 					planetaryObjects.get(i).accY += dy * A / D;
 				}
@@ -219,8 +228,12 @@ public class SolarSystem {
 					dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
 					dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
 					D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-					A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
-					//A = 1.352;
+					if(planetaryObjects.get(i).name=="Lander")
+							{
+								A = 1.352;
+							} else {
+								A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+							}
 					planetaryObjects.get(i).accX += dx * A / D;
 					planetaryObjects.get(i).accY += dy * A / D;
 				}
