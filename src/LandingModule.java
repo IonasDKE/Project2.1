@@ -36,7 +36,7 @@ public class LandingModule extends Planet{
     public void leftThrustAndMove()
     {
         //add fuel consumption
-        double a = 55440/mass;
+        double a = 22/mass;
         double vel=a*SolarSystem.timestep;
         double distance = vel*SolarSystem.timestep;
         double dX = Math.sin(-(angle + (Math.PI/2)))*distance;
@@ -47,7 +47,7 @@ public class LandingModule extends Planet{
     public void rightThrustAndMove()
     {
         //add fuel consumption
-        double a = 55440/mass;
+        double a = 22/mass;
         double vel=a*SolarSystem.timestep;
         double distance = vel*SolarSystem.timestep;
         double dX = Math.sin(-(angle - (Math.PI/2)))*distance;

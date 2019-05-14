@@ -104,7 +104,7 @@ public class SolarSystem {
 		planetaryObjects.add(Venus);
 		*/
 
-		//planetaryObjects.add(centerTitan);
+		planetaryObjects.add(centerTitan);
 		planetaryObjects.add(Lander);
 
 	}
