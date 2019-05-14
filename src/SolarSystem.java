@@ -129,12 +129,13 @@ public class SolarSystem {
 
 				for (int j = 0; j < planetaryObjects.size(); j++) {
 					if (i != j) {
-						dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
-						dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
-						D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-						A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
-						planetaryObjects.get(i).accX += dx * A / D;
-						planetaryObjects.get(i).accY += dy * A / D;
+							dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
+							dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
+							D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+							A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+							planetaryObjects.get(i).accX += dx * A / D;
+							planetaryObjects.get(i).accY += dy * A / D;
+
 					}
 				}
 
