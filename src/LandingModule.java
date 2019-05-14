@@ -104,7 +104,7 @@ public class LandingModule extends Planet{
 
     public void reduceSpeedForLanding(){
         final double LANDING_SPEED = 0.5;
-        final double DISTANCE_WHEN_NEED_TO_REDUCE_SPEED = 10;
+        final double DISTANCE_WHEN_NEED_TO_REDUCE_SPEED = 1;
 
         //thrust the main thruster to reduce speed, does not change the angle
         if (this.x < DISTANCE_WHEN_NEED_TO_REDUCE_SPEED){

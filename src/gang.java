@@ -80,7 +80,7 @@ public class gang extends Application{
 
 					//rocketControler.rightThrust();
 					//rocketControler.leftThrust();
-					rocketControler.rightThrustAndMove();
+					rocketControler.thrust();
 
 					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
 					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);
