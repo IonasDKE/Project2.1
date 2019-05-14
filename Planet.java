@@ -7,6 +7,11 @@ class Point{
 		this.x = x;
 		this.y = y;
 	}
+	public double getAngle(Point p) {
+		double xDiff = p.x - this.x;
+		double yDiff = p.y - this.y;
+		return Math.toDegrees(Math.atan2(yDiff, xDiff));
+	}
 }
 
 public class Planet {
@@ -60,6 +65,7 @@ public class Planet {
 		if(positions.size()>MAX_NUM_POINTS)
 			positions.removeLast();
 	}
+
 }
 
 
