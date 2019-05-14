@@ -33,9 +33,6 @@ public class gang extends Application{
 	int zoommax=0;
 	double diameter=10;
 
-	//testing variable
-	int i=0;
-
 	ArrayList<Sphere> planets = new ArrayList<Sphere>();
 
 	@Override
@@ -83,8 +80,7 @@ public class gang extends Application{
 
 					//rocketControler.rightThrust();
 					//rocketControler.leftThrust();
-					rocketControler.mainThrust();
-
+					rocketControler.rightThrustAndMove();
 
 					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
 					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);

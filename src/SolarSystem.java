@@ -133,6 +133,7 @@ public class SolarSystem {
 							dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
 							D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 							A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+							//A = 1.352;
 							planetaryObjects.get(i).accX += dx * A / D;
 							planetaryObjects.get(i).accY += dy * A / D;
 
@@ -177,6 +178,7 @@ public class SolarSystem {
 					dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
 					D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 					A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+					//A = 1.352;
 					planetaryObjects.get(i).accX += dx * A / D;
 					planetaryObjects.get(i).accY += dy * A / D;
 				}
@@ -218,6 +220,7 @@ public class SolarSystem {
 					dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
 					D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 					A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+					//A = 1.352;
 					planetaryObjects.get(i).accX += dx * A / D;
 					planetaryObjects.get(i).accY += dy * A / D;
 				}
