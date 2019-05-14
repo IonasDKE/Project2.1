@@ -33,6 +33,29 @@ public class LandingModule extends Planet{
         angle -= Math.PI / 180;
     }
 
+    public void leftThrustAndMove()
+    {
+        //add fuel consumption
+        double a = 55440/mass;
+        double vel=a*SolarSystem.timestep;
+        double distance = vel*SolarSystem.timestep;
+        double dX = Math.sin(-(angle + (Math.PI/2)))*distance;
+        double dY = Math.cos(angle + Math.PI/2)*distance;
+        velX += dX/SolarSystem.timestep;
+        velY += dY/SolarSystem.timestep;
+    }
+    public void rightThrustAndMove()
+    {
+        //add fuel consumption
+        double a = 55440/mass;
+        double vel=a*SolarSystem.timestep;
+        double distance = vel*SolarSystem.timestep;
+        double dX = Math.sin(-(angle - (Math.PI/2)))*distance;
+        double dY = Math.cos(angle - Math.PI/2)*distance;
+        velX += dX/SolarSystem.timestep;
+        velY += dY/SolarSystem.timestep;
+    }
+
     public void mainThrust()
     {
         //add fuel consumption
@@ -43,8 +66,6 @@ public class LandingModule extends Planet{
         double dY = Math.cos(angle)*distance;
         velX += dX/SolarSystem.timestep;
         velY += dY/SolarSystem.timestep;
-
-        System.out.println(dX + " " + dY);
     }
 
     public static double getAngle()

@@ -33,19 +33,16 @@ public class gang extends Application{
 	int zoommax=0;
 	double diameter=10;
 
-	//testing variable
-	int i=0;
-
 	ArrayList<Sphere> planets = new ArrayList<Sphere>();
 
 	@Override
 	public void start(Stage primaryStage) {
 
 		makePlanets();
-		LandingModule rocketControler = (LandingModule)s.planetaryObjects.get(1);
+		LandingModule rocketControler = (LandingModule)s.planetaryObjects.get(0);
 		Polygon rocket = new Polygon();
-		double xModule = (int)(offX-diameter/2+s.planetaryObjects.get(1).x*scale);
-		double yModule = (int)(offY-diameter/2+s.planetaryObjects.get(1).y*scale);
+		double xModule = (int)(offX-diameter/2+s.planetaryObjects.get(0).x*scale);
+		double yModule = (int)(offY-diameter/2+s.planetaryObjects.get(0).y*scale);
 		double xModuleLeft = xModule+5;
 		double yModuleLeft = yModule-5;
 		double xModuleRight = xModule-5;
@@ -64,30 +61,29 @@ public class gang extends Application{
 
 					s.updatePositions();
 
-					double dx = s.planetaryObjects.get(0).x - s.planetaryObjects.get(1).x;
-					double dy = s.planetaryObjects.get(0).y - s.planetaryObjects.get(1).y;
-					double D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-					if(D<=2500400)
-					{
-						System.out.println(/*s.planetaryObjects.get(1).velX + " " + */s.planetaryObjects.get(1).velY);
+					//double dx = s.planetaryObjects.get(0).x - s.planetaryObjects.get(1).x;
+					//double dy = s.planetaryObjects.get(0).y - s.planetaryObjects.get(1).y;
+					//double D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+					//if(D<=2500400)
+					//{
+					//	System.out.println(/*s.planetaryObjects.get(1).velX + " " + */s.planetaryObjects.get(1).velY);
 						//System.out.println(s.planetaryObjects.get(1).x + " " + s.planetaryObjects.get(1).y);
-						try
-						{
-							Thread.sleep(20000);
-						}
-						catch(InterruptedException ex)
-						{
-							Thread.currentThread().interrupt();
-						}
-					}
+					//	try
+					//	{
+					//		Thread.sleep(20000);
+					//	}
+					//	catch(InterruptedException ex)
+					//	{
+					//		Thread.currentThread().interrupt();
+					//	}
+					//}
 
 					//rocketControler.rightThrust();
-					//rocketControler.leftThrust();
-					rocketControler.mainThrust();
+					//rocketControler.mainThrust();
+					rocketControler.leftThrustAndMove();
 
-
-					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
-					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);
+					rocket.setTranslateX(s.planetaryObjects.get(0).x*scale);
+					rocket.setTranslateY(s.planetaryObjects.get(0).y*scale);
 
 					for(int j=0;j<planets.size();j++)
 					{
