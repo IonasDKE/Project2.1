@@ -66,6 +66,53 @@ public class LandingModule extends Planet{
         double dY = Math.cos(angle)*distance;
         velX += dX/SolarSystem.timestep;
         velY += dY/SolarSystem.timestep;
+
+
+    }
+
+    public void thrust(){
+
+        int toThrust = check();
+
+        if (toThrust == 1){
+            rightThrust();
+
+        }else if (toThrust == 2){
+            leftThrust();
+        }
+        reduceSpeedForLanding();
+    }
+
+    public int check(){
+        final Point TitanPosition = new Point(0,0);
+        final double DERIVATION = 1;
+        final double STARTING_ANGLE = 0;
+        Point modulePosition = new Point(this.x, this.y);
+
+        if (modulePosition.getAngle(TitanPosition) > STARTING_ANGLE + DERIVATION) {
+            //Need to thrust right
+            return 1;
+        }
+        else if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE + DERIVATION) {
+            //Need to thrust left
+            return 2;
+        }
+        else {
+            return 0;
+        }
+    }
+
+    public void reduceSpeedForLanding(){
+        final double LANDING_SPEED = 0.5;
+        final double DISTANCE_WHEN_NEED_TO_REDUCE_SPEED = 300;
+        double a = 440/mass;
+
+        //thrust the main thruster to reduce speed, does not change the angle
+        if (this.x < DISTANCE_WHEN_NEED_TO_REDUCE_SPEED){
+            if (this.velY > LANDING_SPEED){
+                this.velY = this.velY+a*SolarSystem.timestep;
+            }
+        }
     }
 
     public static double getAngle()
