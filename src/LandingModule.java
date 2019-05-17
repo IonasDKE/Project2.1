@@ -4,7 +4,7 @@ public class LandingModule extends Planet{
 
     //the angle of rotation of the spaceship
     private static double oldAngle=0;
-    private static double angle=0;
+    private static double angle=10;
 
     //mass of the landing module(same as Huygens)
     private double mass=309;
@@ -69,42 +69,71 @@ public class LandingModule extends Planet{
 
 
     }
-
+    // this boolean if for testing the thrusting
+    boolean a = true;
     public void thrust(){
+        if (a) {
+           // velX -= 2;
+            angle += Math.PI;
+        }
+       // a = false;
 
-        int toThrust = check();
+        int toThrustForAngle = check(true );
+        int toThrustForPosition = check(false);
 
-        if (toThrust == 1){
+        if (toThrustForAngle == 1){
             rightThrust();
 
-        }else if (toThrust == 2){
+        }else if (toThrustForAngle == 2){
             leftThrust();
         }
+
+        if (toThrustForPosition == 1){
+            rightThrustAndMove();
+        }
+        else if (toThrustForPosition == 2){
+            leftThrustAndMove();
+        }
+
         reduceSpeedForLanding();
     }
 
-    public int check(){
+    public int check(boolean a){
         final Point TitanPosition = new Point(0,0);
-        final double DERIVATION = 1;
+        final double ANGLE_DERIVATION = 1;
+        final double STARTING_POSITION = 0;
+        final double POSITION_DERIVATION = 1;
         final double STARTING_ANGLE = 0;
         Point modulePosition = new Point(this.x, this.y);
 
-        if (modulePosition.getAngle(TitanPosition) > STARTING_ANGLE + DERIVATION) {
-            //Need to thrust right
-            return 1;
+
+        if(a) {
+            if (modulePosition.getAngle(TitanPosition) > STARTING_ANGLE + ANGLE_DERIVATION) {
+                //Need to thrust right
+                return 1;
+            } else if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE + ANGLE_DERIVATION) {
+                //Need to thrust left
+                return 2;
+            } else {
+                return 0;
+            }
+        }else{
+            if (modulePosition.x > STARTING_POSITION + POSITION_DERIVATION){
+                //Need to thrust right
+                return 1;
+            } else if (modulePosition.x < STARTING_POSITION - POSITION_DERIVATION) {
+                //Need to thrust left
+                return 2;
+            } else {
+                return 0;
+            }
         }
-        else if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE + DERIVATION) {
-            //Need to thrust left
-            return 2;
-        }
-        else {
-            return 0;
-        }
+
     }
 
     public void reduceSpeedForLanding(){
         final double LANDING_SPEED = 0.5;
-        final double DISTANCE_WHEN_NEED_TO_REDUCE_SPEED = 1;
+        final double DISTANCE_WHEN_NEED_TO_REDUCE_SPEED = 0.5;
 
         //thrust the main thruster to reduce speed, does not change the angle
         if (this.x < DISTANCE_WHEN_NEED_TO_REDUCE_SPEED){
