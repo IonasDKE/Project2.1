@@ -4,7 +4,7 @@ public class LandingModule extends Planet{
 
     //the angle of rotation of the spaceship
     private static double oldAngle=0;
-    private static double angle=10;
+    private static double angle=0;
 
     //mass of the landing module(same as Huygens)
     private double mass=309;

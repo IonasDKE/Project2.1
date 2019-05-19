@@ -33,6 +33,10 @@ public class gang extends Application{
 	int zoommax=0;
 	double diameter=10;
 
+	int secondsPassed=0;
+	int every17SecsDontThrust=0;
+	int howMany17secs = 0;
+
 	ArrayList<Sphere> planets = new ArrayList<Sphere>();
 
 	@Override
@@ -60,16 +64,20 @@ public class gang extends Application{
 					//Put here the code which is supposed to be repeated(or check the x,y coordinates and decide when to thrust)
 
 					s.updatePositions();
+                    secondsPassed++;
 
 					double dx = s.planetaryObjects.get(0).x - s.planetaryObjects.get(1).x;
 					double dy = s.planetaryObjects.get(0).y - s.planetaryObjects.get(1).y;
 					double D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-					if(D<=2500400)
+					if(D<=2500000)
 					{
+						System.out.println(howMany17secs);
 						System.out.println(/*s.planetaryObjects.get(1).velX + " " + */s.planetaryObjects.get(1).velY);
 						//System.out.println(s.planetaryObjects.get(1).x + " " + s.planetaryObjects.get(1).y);
 						try
 						{
+						    System.out.println(D);
+						    System.out.println(secondsPassed);
 							Thread.sleep(20000);
 						}
 						catch(InterruptedException ex)
@@ -78,9 +86,7 @@ public class gang extends Application{
 						}
 					}
 
-					//rocketControler.rightThrust();
-					//rocketControler.leftThrust();
-					rocketControler.thrust();
+                    openLoopController(rocketControler);
 
 					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
 					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);
@@ -216,6 +222,28 @@ public class gang extends Application{
 			}
 
 			planets.add(planet);
+			}
+		}
+	}
+	public void openLoopController(LandingModule rocketControler)
+	{
+		if(secondsPassed>771 && secondsPassed<15260) {
+			rocketControler.mainThrust();
+		}
+		if(secondsPassed>=15260)
+		{
+			if(every17SecsDontThrust<=17)
+			{
+				rocketControler.mainThrust();
+				every17SecsDontThrust++;
+			} else
+			{
+				howMany17secs++;
+				every17SecsDontThrust=0;
+				if(howMany17secs>=252 && howMany17secs<=260)
+				{
+					rocketControler.mainThrust();
+				}
 			}
 		}
 	}
