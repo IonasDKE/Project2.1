@@ -4,10 +4,10 @@ public class LandingModule extends Planet{
 
     //the angle of rotation of the spaceship
     private static double oldAngle=0;
-    private static double angle=0;
+    static double angle=0;
 
     //mass of the landing module(same as Huygens)
-    private double mass=309;
+    private double mass=15000;
 
     public LandingModule(String name, double mass, double x, double y, double velX, double velY)
     {
@@ -36,7 +36,7 @@ public class LandingModule extends Planet{
     public void leftThrustAndMove()
     {
         //add fuel consumption
-        double a = 22/mass;
+        double a = 500/mass;
         double vel=a*SolarSystem.timestep;
         double distance = vel*SolarSystem.timestep;
         double dX = Math.sin(-(angle + (Math.PI/2)))*distance;
@@ -47,7 +47,7 @@ public class LandingModule extends Planet{
     public void rightThrustAndMove()
     {
         //add fuel consumption
-        double a = 22/mass;
+        double a = 500/mass;
         double vel=a*SolarSystem.timestep;
         double distance = vel*SolarSystem.timestep;
         double dX = Math.sin(-(angle - (Math.PI/2)))*distance;
@@ -59,16 +59,26 @@ public class LandingModule extends Planet{
     public void mainThrust()
     {
         //add fuel consumption
-        double a = 440/mass;
+        double a = 44000/mass;
         double vel=a*SolarSystem.timestep;
         double distance = vel*SolarSystem.timestep;
         double dX = Math.sin(-angle)*distance;
         double dY = Math.cos(angle)*distance;
         velX += dX/SolarSystem.timestep;
         velY += dY/SolarSystem.timestep;
-
-
     }
+    public void mainThrusthalf()
+    {
+        //add fuel consumption
+        double a = 22000/mass;
+        double vel=a*SolarSystem.timestep;
+        double distance = vel*SolarSystem.timestep;
+        double dX = Math.sin(-angle)*distance;
+        double dY = Math.cos(angle)*distance;
+        velX += dX/SolarSystem.timestep;
+        velY += dY/SolarSystem.timestep;
+    }
+
     // this boolean if for testing the thrusting
     boolean a = true;
     public void thrust(){

@@ -71,7 +71,6 @@ public class gang extends Application{
 					double D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 					if(D<=2500000)
 					{
-						System.out.println(howMany17secs);
 						System.out.println(/*s.planetaryObjects.get(1).velX + " " + */s.planetaryObjects.get(1).velY);
 						//System.out.println(s.planetaryObjects.get(1).x + " " + s.planetaryObjects.get(1).y);
 						try
@@ -86,7 +85,7 @@ public class gang extends Application{
 						}
 					}
 
-                    openLoopController(rocketControler);
+					openLoopController(rocketControler);
 
 					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
 					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);
@@ -225,29 +224,23 @@ public class gang extends Application{
 			}
 		}
 	}
+
 	public void openLoopController(LandingModule rocketControler)
 	{
-		if(secondsPassed>771 && secondsPassed<15260) {
-			rocketControler.mainThrust();
-		}
-		if(secondsPassed>=15260)
+		if(secondsPassed>2525)
 		{
-			if(every17SecsDontThrust<=17)
+			if(secondsPassed<4671) {
+				rocketControler.mainThrust();
+			}
+			else  if(secondsPassed<=4850){
+				rocketControler.mainThrusthalf();
+			} else if(secondsPassed==4851)
 			{
 				rocketControler.mainThrust();
-				every17SecsDontThrust++;
-			} else
-			{
-				howMany17secs++;
-				every17SecsDontThrust=0;
-				if(howMany17secs>=252 && howMany17secs<=260)
-				{
-					rocketControler.mainThrust();
-				}
 			}
 		}
-	}
 
+	}
 
 	public static void main(String[] args) {
 		launch(args);
