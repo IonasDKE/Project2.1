@@ -11,9 +11,6 @@ public class LandingModule extends Planet{
     private static double oldAngle=0;
     double angle=0;
 
-    //mass of the landing module(same as Huygens)
-    private double mass=15000;
-
     public LandingModule(String name, double mass, double x, double y, double velX, double velY)
     {
         super(name, mass, x, y, velX, velY);
@@ -93,4 +90,5 @@ public class LandingModule extends Planet{
     {
         return oldAngle;
     }
+    public double getMass(){ return mass;}
 }

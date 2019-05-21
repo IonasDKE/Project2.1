@@ -31,7 +31,7 @@ public class gang extends Application{
 	int fstClickX, fstClickY;
 	SolarSystem s = new SolarSystem();
 	int zoommax=0;
-	double diameter=5000000*scale;
+	double diameter=6490000*scale;
 
 	int secondsPassed=0;
 
@@ -70,7 +70,7 @@ public class gang extends Application{
 					if(D<=2500000)
 					{
 						System.out.println(/*s.planetaryObjects.get(1).velX + " " + */s.planetaryObjects.get(1).velY);
-						//System.out.println(s.planetaryObjects.get(1).x + " " + s.planetaryObjects.get(1).y);
+						System.out.println(s.planetaryObjects.get(1).x + " " + s.planetaryObjects.get(1).y);
 						try
 						{
 						    System.out.println(D);
@@ -82,7 +82,9 @@ public class gang extends Application{
 							Thread.currentThread().interrupt();
 						}
 					}
-
+					if(Math.random()<0.9) {
+						wind(rocketControler, D);
+					}
 					openLoopController(rocketControler);
 					//thrust(rocketControler,rocket);
 
@@ -319,5 +321,40 @@ public class gang extends Application{
 				rocket.mainThrust();
 			}
 		}
+	}
+	public void wind(LandingModule rocket, double D)
+	{
+		//Apollo 16 dimensions: 23 feet 1 inch (7.04 m) high; 31 feet (9.4 m) wide; 31 feet (9.4 m) deep https://en.wikipedia.org/wiki/Apollo_Lunar_Module
+		double S=7*9;
+		double Am=0;
+		double windSpeed=0;
+		double dX=0;
+		double dY=0;
+		//F = S*Am*a^2 - S is the area "hit by the wind", Am is air density, a^2 speed of the wind in m/s^2
+		if(D>1000000)
+		{
+			Am=Math.pow(10,-10);
+			windSpeed = Math.random()*30;
+		} else if(D>500000){
+			Am=Math.pow(10,-5);
+			windSpeed = Math.random()*80;
+		} else {
+			Am=Math.pow(10,0);
+			windSpeed = Math.random()*120;
+		}
+		double windForce = S*Am*windSpeed*windSpeed;
+		double acc = windForce/rocket.getMass();
+		double vel=acc*SolarSystem.timestep;
+		double distance = vel*SolarSystem.timestep;
+		if(Math.random()<0.5) {
+			dX = Math.sin(-(rocket.angle + (Math.PI / 2))) * distance;
+			dY = Math.cos(rocket.angle + Math.PI / 2) * distance;
+		} else {
+			dX = Math.sin(-(rocket.angle - (Math.PI/2)))*distance;
+			dY = Math.cos(rocket.angle - Math.PI/2)*distance;
+		}
+
+		rocket.velX += dX/SolarSystem.timestep;
+		rocket.velY += dY/SolarSystem.timestep;
 	}
 }
