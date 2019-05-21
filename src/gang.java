@@ -85,8 +85,8 @@ public class gang extends Application{
 					if(Math.random()<0.9) {
 						wind(rocketControler, D);
 					}
-					openLoopController(rocketControler);
-					//thrust(rocketControler,rocket);
+					//openLoopController(rocketControler);
+					closeLoopController(rocketControler,rocket);
 
 					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
 					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);
@@ -248,72 +248,48 @@ public class gang extends Application{
 
 	}
 
-	// this boolean if for testing the thrusting
-	boolean a = true;
-	public void thrust(LandingModule rocket, Polygon guiRocket){
-		if (a) {
-			//this.x -= 10;
-			//angle += Math.PI;
-		}
-		// a = false;
+	public void closeLoopController(LandingModule rocket, Polygon guiRocket){
 
-		int toThrustForAngle = check(true , rocket);
-		int toThrustForPosition = check(false, rocket);
+		//System.out.println("x : "+rocket.x + " y = " + rocket.y);
 
-		if (toThrustForAngle == 1){
-			rocket.rightThrust();
-			guiRocket.getTransforms().add(new Rotate(Math.PI/180, rocket.x, rocket.y));
-
-		}else if (toThrustForAngle == 2){
-			rocket.leftThrust();
-			guiRocket.getTransforms().add(new Rotate(-Math.PI/180, rocket.x, rocket.y));
-		}
-
-		if (toThrustForPosition == 1){
-			rocket.rightThrustAndMove();
-		}
-		else if (toThrustForPosition == 2){
-			rocket.leftThrustAndMove();
-		}
-
-		reduceSpeedForLanding(rocket);
-	}
-
-	public int check(boolean a, LandingModule rocket){
-		final Point TitanPosition = new Point(0,0);
-		final double ANGLE_DERIVATION = 1;
+		Point TitanPosition = new Point(s.planetaryObjects.get(0).x, s.planetaryObjects.get(0).y);
 		final double STARTING_POSITION = 0;
 		final double POSITION_DERIVATION = 1;
-		final double STARTING_ANGLE = 0;
-		Point modulePosition = new Point(rocket.x, rocket.y);
 
-		if(a) {
-			if (modulePosition.getAngle(TitanPosition) > STARTING_ANGLE + ANGLE_DERIVATION) {
-				//Need to thrust right
-				return 1;
-			} else if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE + ANGLE_DERIVATION) {
-				//Need to thrust left
-				return 2;
-			} else {
-				return 0;
-			}
-		}else{
-			if (modulePosition.x > STARTING_POSITION + POSITION_DERIVATION){
-				//Need to thrust right
-				return 1;
-			} else if (modulePosition.x < STARTING_POSITION - POSITION_DERIVATION) {
-				//Need to thrust left
-				return 2;
-			} else {
-				return 0;
-			}
-		}
+		final double STARTING_ANGLE = -90;
+		final double ANGLE_DERIVATION = 1;
+
+		Point modulePosition = new Point(rocket.x, rocket.y);
+		System.out.println("angle = " + modulePosition.getAngle(TitanPosition));
+
+
+		if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE - ANGLE_DERIVATION && modulePosition.getAngle(TitanPosition) > STARTING_ANGLE) {
+			//Need to adjust angle from right side
+			System.out.println("right angle correction");
+			rocket.rightThrust();
+			//guiRocket.getTransforms().add(new Rotate(Math.PI/180, rocket.x, rocket.y));
+		} else if (modulePosition.getAngle(TitanPosition) > STARTING_ANGLE + ANGLE_DERIVATION && modulePosition.getAngle(TitanPosition) < STARTING_ANGLE) {
+			//Need to thrust left
+			System.out.println("left angle correction");
+			rocket.leftThrust();
+			//guiRocket.getTransforms().add(new Rotate(Math.PI/180, rocket.x, rocket.y));
+		}else{}
+
+		if (rocket.x > STARTING_POSITION + POSITION_DERIVATION){
+			//Need to thrust right
+			rocket.rightThrustAndMove();
+		} else if (rocket.x < STARTING_POSITION - POSITION_DERIVATION) {
+			//Need to thrust left
+			rocket.leftThrustAndMove();
+		} else {}
+
+		reduceSpeedForLanding(rocket);
 
 	}
 
 	public void reduceSpeedForLanding(LandingModule rocket){
 		final double LANDING_SPEED = 0.5;
-		final double DISTANCE_WHEN_NEED_TO_REDUCE_SPEED = 0.5;
+		final double DISTANCE_WHEN_NEED_TO_REDUCE_SPEED = 100;
 
 		//thrust the main thruster to reduce speed, does not change the angle
 		if (rocket.x < DISTANCE_WHEN_NEED_TO_REDUCE_SPEED){

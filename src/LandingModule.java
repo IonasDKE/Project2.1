@@ -1,8 +1,3 @@
-import javafx.scene.shape.Polygon;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.*;
-
-
 public class LandingModule extends Planet{
 
     //Simulation of the motion of a spacecraft with only yaw rotation considered
