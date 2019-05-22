@@ -69,12 +69,12 @@ public class gang extends Application{
 					double D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
 					if(D<=2500000)
 					{
-						System.out.println(/*s.planetaryObjects.get(1).velX + " " + */s.planetaryObjects.get(1).velY);
-						System.out.println(s.planetaryObjects.get(1).x + " " + s.planetaryObjects.get(1).y);
+						System.out.println("VelY " +/*s.planetaryObjects.get(1).velX + " " + */s.planetaryObjects.get(1).velY);
+						System.out.println("x : " + s.planetaryObjects.get(1).x + "y : " + s.planetaryObjects.get(1).y);
 						try
 						{
-						    System.out.println(D);
-						    System.out.println(secondsPassed);
+						    System.out.println("d = " +D);
+						    System.out.println("Second passed " +secondsPassed);
 							Thread.sleep(20000);
 						}
 						catch(InterruptedException ex)
@@ -160,7 +160,7 @@ public class gang extends Application{
 
 		primaryStage.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
 			fstClickX=(int)(event.getX());
-			System.out.println(fstClickX);
+			//System.out.println(fstClickX);
 			fstClickY=(int)(event.getY());
 
 		});
@@ -210,7 +210,7 @@ public class gang extends Application{
 			int a = (int) (offX - diameter / 2 + p.x * scale);
 			int b = (int) (offY - diameter / 2 + p.y * scale);
 
-			System.out.println(a + " " + b);
+			//System.out.println(a + " " + b);
 			planet.setRadius(diameter);
 
 
@@ -240,7 +240,6 @@ public class gang extends Application{
 				rocketControler.mainThrust();
 			}
 		}
-
 	}
 
 	public static void main(String[] args) {
@@ -260,19 +259,18 @@ public class gang extends Application{
 		final double ANGLE_DERIVATION = 1;
 
 		Point modulePosition = new Point(rocket.x, rocket.y);
-		System.out.println("angle = " + modulePosition.getAngle(TitanPosition));
-
+		//System.out.println("angle = " + modulePosition.getAngle(TitanPosition));
 
 		if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE - ANGLE_DERIVATION && modulePosition.getAngle(TitanPosition) > STARTING_ANGLE) {
 			//Need to adjust angle from right side
-			System.out.println("right angle correction");
+			//System.out.println("right angle correction");
 			rocket.rightThrust();
-			//guiRocket.getTransforms().add(new Rotate(Math.PI/180, rocket.x, rocket.y));
+			guiRocket.getTransforms().add(new Rotate(Math.PI/180, rocket.x, rocket.y));
 		} else if (modulePosition.getAngle(TitanPosition) > STARTING_ANGLE + ANGLE_DERIVATION && modulePosition.getAngle(TitanPosition) < STARTING_ANGLE) {
 			//Need to thrust left
-			System.out.println("left angle correction");
+			//System.out.println("left angle correction");
 			rocket.leftThrust();
-			//guiRocket.getTransforms().add(new Rotate(Math.PI/180, rocket.x, rocket.y));
+			guiRocket.getTransforms().add(new Rotate(Math.PI/180, rocket.x, rocket.y));
 		}else{}
 
 		if (rocket.x > STARTING_POSITION + POSITION_DERIVATION){
@@ -283,21 +281,21 @@ public class gang extends Application{
 			rocket.leftThrustAndMove();
 		} else {}
 
-		reduceSpeedForLanding(rocket);
-
-	}
-
-	public void reduceSpeedForLanding(LandingModule rocket){
-		final double LANDING_SPEED = 0.5;
-		final double DISTANCE_WHEN_NEED_TO_REDUCE_SPEED = 100;
-
-		//thrust the main thruster to reduce speed, does not change the angle
-		if (rocket.x < DISTANCE_WHEN_NEED_TO_REDUCE_SPEED){
-			if (rocket.x > LANDING_SPEED){
+		if(secondsPassed>2525)
+		{
+			if(secondsPassed<4671) {
+				rocket.mainThrust();
+			}
+			else  if(secondsPassed<=4850){
+				rocket.mainThrusthalf();
+			} else if(secondsPassed==4851)
+			{
 				rocket.mainThrust();
 			}
 		}
+
 	}
+
 	public void wind(LandingModule rocket, double D)
 	{
 		//Apollo 16 dimensions: 23 feet 1 inch (7.04 m) high; 31 feet (9.4 m) wide; 31 feet (9.4 m) deep https://en.wikipedia.org/wiki/Apollo_Lunar_Module
