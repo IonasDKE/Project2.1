@@ -298,35 +298,40 @@ public class gang extends Application{
 
 	public void wind(LandingModule rocket, double D)
 	{
+		double distanceToSurface = D-2500000;
 		//Apollo 16 dimensions: 23 feet 1 inch (7.04 m) high; 31 feet (9.4 m) wide; 31 feet (9.4 m) deep https://en.wikipedia.org/wiki/Apollo_Lunar_Module
 		double S=7*9;
 		double Am=0;
 		double windSpeed=0;
 		double dX=0;
 		double dY=0;
-		//F = S*Am*a^2 - S is the area "hit by the wind", Am is air density, a^2 speed of the wind in m/s^2
-		if(D>1000000)
+		//F = S*Am*a^2 - S is the area "hit by the wind", Am is air density, a^2 speed of the wind in m/s
+		if(D>distanceToSurface)
 		{
 			Am=Math.pow(10,-10);
-			windSpeed = Math.random()*30;
-		} else if(D>500000){
-			Am=Math.pow(10,-5);
-			windSpeed = Math.random()*80;
-		} else {
-			Am=Math.pow(10,0);
-			windSpeed = Math.random()*120;
+			windSpeed = Math.random()*10;
 		}
+		if(distanceToSurface>500000 && distanceToSurface<1000000){
+			Am=Math.pow(10,-5);
+			windSpeed = 40+Math.random()*30;
+		}
+		if(distanceToSurface>100000 && D<500000) {
+			Am = Math.pow(10, 0);
+			windSpeed = 100+Math.random()*20;
+		}
+		if(distanceToSurface<100000){
+			Am=Math.pow(10,0)+0.5;
+			windSpeed = Math.random()*20;
+		}
+
 		double windForce = S*Am*windSpeed*windSpeed;
+
 		double acc = windForce/rocket.getMass();
 		double vel=acc*SolarSystem.timestep;
 		double distance = vel*SolarSystem.timestep;
-		if(Math.random()<0.5) {
-			dX = Math.sin(-(rocket.angle + (Math.PI / 2))) * distance;
-			dY = Math.cos(rocket.angle + Math.PI / 2) * distance;
-		} else {
-			dX = Math.sin(-(rocket.angle - (Math.PI/2)))*distance;
-			dY = Math.cos(rocket.angle - Math.PI/2)*distance;
-		}
+
+		dX = Math.sin(-(rocket.angle + (Math.PI / 2))) * distance;
+		dY = Math.cos(rocket.angle + Math.PI / 2) * distance;
 
 		rocket.velX += dX/SolarSystem.timestep;
 		rocket.velY += dY/SolarSystem.timestep;
