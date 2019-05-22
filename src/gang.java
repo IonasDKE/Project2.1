@@ -336,4 +336,14 @@ public class gang extends Application{
 		rocket.velX += dX/SolarSystem.timestep;
 		rocket.velY += dY/SolarSystem.timestep;
 	}
+	public void leftThrust(Polygon rocket, LandingModule rocketControler, double xModule, double yModule)
+	{
+		rocketControler.leftThrust();
+		rocket.getTransforms().add(new Rotate(rocketControler.angle, xModule, yModule));
+	}
+	public void rightThrust(Polygon rocket, LandingModule rocketControler, double xModule, double yModule)
+	{
+		rocketControler.rightThrust();
+		rocket.getTransforms().add(new Rotate(rocketControler.angle, xModule, yModule));
+	}
 }
