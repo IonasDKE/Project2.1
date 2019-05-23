@@ -62,7 +62,7 @@ public class gang extends Application{
 					//Put here the code which is supposed to be repeated(or check the x,y coordinates and decide when to thrust)
 
 					s.updatePositions();
-                    secondsPassed++;
+					secondsPassed++;
 
 					double dx = s.planetaryObjects.get(0).x - s.planetaryObjects.get(1).x;
 					double dy = s.planetaryObjects.get(0).y - s.planetaryObjects.get(1).y;
@@ -73,8 +73,8 @@ public class gang extends Application{
 						System.out.println("x : " + s.planetaryObjects.get(1).x + "y : " + s.planetaryObjects.get(1).y);
 						try
 						{
-						    System.out.println("d = " +D);
-						    System.out.println("Second passed " +secondsPassed);
+							System.out.println("d = " +D);
+							System.out.println("Second passed " +secondsPassed);
 							Thread.sleep(20000);
 						}
 						catch(InterruptedException ex)
@@ -86,7 +86,8 @@ public class gang extends Application{
 						wind(rocketControler, D);
 					}
 					//openLoopController(rocketControler);
-					closeLoopController(rocketControler,rocket);
+					closeLoopController(rocketControler,rocket, xModule, yModule);
+
 
 					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
 					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);
@@ -203,25 +204,25 @@ public class gang extends Application{
 		for(Planet p : s.planetaryObjects)
 		{
 			if(p.name!="Lander") {
-			Sphere planet = new Sphere();
-			planet.setTranslateX((int) (offX - diameter / 2 + p.x * scale));
-			planet.setTranslateY((int) (offY - diameter / 2 + p.y * scale));
+				Sphere planet = new Sphere();
+				planet.setTranslateX((int) (offX - diameter / 2 + p.x * scale));
+				planet.setTranslateY((int) (offY - diameter / 2 + p.y * scale));
 
-			int a = (int) (offX - diameter / 2 + p.x * scale);
-			int b = (int) (offY - diameter / 2 + p.y * scale);
+				int a = (int) (offX - diameter / 2 + p.x * scale);
+				int b = (int) (offY - diameter / 2 + p.y * scale);
 
-			//System.out.println(a + " " + b);
-			planet.setRadius(diameter);
+				//System.out.println(a + " " + b);
+				planet.setRadius(diameter);
 
 
-			if (p.name == "centerTitan") {
+				if (p.name == "centerTitan") {
 
-				PhongMaterial material = new PhongMaterial();
-				material.setDiffuseMap(new Image("http://westciv.com/images/wdblogs/radialgradients/simpleclorstops.png"));
-				planet.setMaterial(material);
-			}
+					PhongMaterial material = new PhongMaterial();
+					material.setDiffuseMap(new Image("http://westciv.com/images/wdblogs/radialgradients/simpleclorstops.png"));
+					planet.setMaterial(material);
+				}
 
-			planets.add(planet);
+				planets.add(planet);
 			}
 		}
 	}
@@ -247,7 +248,7 @@ public class gang extends Application{
 
 	}
 
-	public void closeLoopController(LandingModule rocket, Polygon guiRocket){
+	public void closeLoopController(LandingModule rocket, Polygon guiRocket, double xModule, double yModule){
 
 		//System.out.println("x : "+rocket.x + " y = " + rocket.y);
 
@@ -260,44 +261,39 @@ public class gang extends Application{
 
 		Point modulePosition = new Point(rocket.x, rocket.y);
 		//System.out.println("angle = " + modulePosition.getAngle(TitanPosition));
-		//System.out.println("velY : " + rocket.velY );
+		System.out.println("velY : " + rocket.velY );
 
 		if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE - ANGLE_DERIVATION && modulePosition.getAngle(TitanPosition) > STARTING_ANGLE) {
 			//Need to adjust angle from right side
 			//System.out.println("right angle correction");
-			rocket.rightThrust();
-			guiRocket.getTransforms().add(new Rotate(Math.PI/180, rocket.x, rocket.y));
+			rightThrust(guiRocket, rocket, xModule, yModule);
 		} else if (modulePosition.getAngle(TitanPosition) > STARTING_ANGLE + ANGLE_DERIVATION && modulePosition.getAngle(TitanPosition) < STARTING_ANGLE) {
 			//Need to thrust left
 			//System.out.println("left angle correction");
-			rocket.leftThrust();
-			guiRocket.getTransforms().add(new Rotate(Math.PI/180, rocket.x, rocket.y));
-		}
+			leftThrust(guiRocket, rocket, xModule, yModule);
+		}else{}
 
 		if (rocket.x > STARTING_POSITION + POSITION_DERIVATION){
 			//Need to thrust right
-			System.out.println("right position correction " + rocket.x);
-			rocket.rightThrustAndMove();
-
+			rocket.leftThrustAndMove();
 		} else if (rocket.x < STARTING_POSITION - POSITION_DERIVATION) {
 			//Need to thrust left
-			System.out.println("left position correction " + rocket.x);
-			rocket.leftThrustAndMove();
-		}
+			rocket.rightThrustAndMove();
+		} else {}
 
 		if (rocket.y  < 3500000 && rocket.y > 2600000){
 			if (rocket.velY < -100){
-				//System.out.println("main thrust");
+				System.out.println("main thrust");
 				rocket.mainThrust();
 			}
 		}else if(rocket.y < 2600000 && rocket.y > 2500000){
 			if (rocket.velY < -50){
-				//System.out.println("main thrust second ");
+				System.out.println("main thrust 25 ");
 				rocket.mainThrust();
 			}
 		}else if (rocket.y < 2499000){
 			if (rocket.velY < -0.45){
-				//System.out.println("main thrust half ");
+				System.out.println("main thrust half ");
 				rocket.mainThrusthalf();
 			}
 		}
@@ -322,15 +318,11 @@ public class gang extends Application{
 		}
 		if(distanceToSurface>500000 && distanceToSurface<1000000){
 			Am=Math.pow(10,-5);
-			windSpeed = 40+Math.random()*30;
+			windSpeed = 20+Math.random()*10;
 		}
 		if(distanceToSurface>100000 && D<500000) {
 			Am = Math.pow(10, 0);
-			windSpeed = 100+Math.random()*20;
-		}
-		if(distanceToSurface<100000){
-			Am=Math.pow(10,0)+0.5;
-			windSpeed = Math.random()*20;
+			windSpeed = 50+Math.random()*20;
 		}
 
 		double windForce = S*Am*windSpeed*windSpeed;
