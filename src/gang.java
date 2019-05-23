@@ -86,7 +86,7 @@ public class gang extends Application{
 						wind(rocketControler, D);
 					}
 					//openLoopController(rocketControler);
-					closeLoopController(rocketControler,rocket, xModule, yModule);
+					closeLoopController(rocketControler,rocket, xModule, yModule, D);
 
 
 					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
@@ -248,7 +248,7 @@ public class gang extends Application{
 
 	}
 
-	public void closeLoopController(LandingModule rocket, Polygon guiRocket, double xModule, double yModule){
+	public void closeLoopController(LandingModule rocket, Polygon guiRocket, double xModule, double yModule, double distanceToSurface){
 
 		//System.out.println("x : "+rocket.x + " y = " + rocket.y);
 
@@ -281,19 +281,39 @@ public class gang extends Application{
 			rocket.rightThrustAndMove();
 		} else {}
 
-		if (rocket.y  < 3500000 && rocket.y > 2600000){
+		if (distanceToSurface  < 3500000 && distanceToSurface > 2600000){
 			if (rocket.velY < -100){
 				System.out.println("main thrust");
 				rocket.mainThrust();
 			}
-		}else if(rocket.y < 2600000 && rocket.y > 2500150){
-			if (rocket.velY < -20){
+		}else if(distanceToSurface < 2600000 && distanceToSurface > 2501000){
+			if (rocket.velY < -50){
 				System.out.println("main thrust 25 ");
 				rocket.mainThrust();
 			}
-		}else if (rocket.y < 2500150){
-			if (rocket.velY < -0.45){
+		}else if (distanceToSurface < 2501000 && distanceToSurface > 2500500){
+			if (rocket.velY < -20){
 				System.out.println("main thrust half ");
+				rocket.mainThrust();
+			}
+		} else if(distanceToSurface < 2500500 && distanceToSurface > 2500150){
+			if (rocket.velY < -10){
+				System.out.println("main thrust half ");
+				rocket.mainThrust();
+			}
+		} else if(distanceToSurface < 2500150 && distanceToSurface > 2500015){
+			if (rocket.velY < -5){
+				System.out.println("main thrust half ");
+				rocket.mainThrust();
+			}
+		} else if(distanceToSurface < 2500015 && distanceToSurface > 2500007){
+			if (rocket.velY < -1){
+				System.out.println("main thrust half ");
+				rocket.mainThrust();
+			}
+		} else if(distanceToSurface < 2500007){
+			if (rocket.velY < -0.1){
+				System.out.println(distanceToSurface);
 				rocket.mainThrusthalf();
 			}
 		}
