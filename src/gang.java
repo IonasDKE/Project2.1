@@ -260,6 +260,7 @@ public class gang extends Application{
 
 		Point modulePosition = new Point(rocket.x, rocket.y);
 		//System.out.println("angle = " + modulePosition.getAngle(TitanPosition));
+		System.out.println("velY : " + rocket.velY );
 
 		if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE - ANGLE_DERIVATION && modulePosition.getAngle(TitanPosition) > STARTING_ANGLE) {
 			//Need to adjust angle from right side
@@ -281,18 +282,23 @@ public class gang extends Application{
 			rocket.leftThrustAndMove();
 		} else {}
 
-		if(secondsPassed>2525)
-		{
-			if(secondsPassed<4671) {
+		if (rocket.y  < 3500000 && rocket.y > 2600000){
+			if (rocket.velY < -100){
+				System.out.println("main thrust");
 				rocket.mainThrust();
 			}
-			else  if(secondsPassed<=4850){
-				rocket.mainThrusthalf();
-			} else if(secondsPassed==4851)
-			{
+		}else if(rocket.y < 2600000 && rocket.y > 2500000){
+			if (rocket.velY < -50){
+				System.out.println("main thrust 25 ");
 				rocket.mainThrust();
+			}
+		}else if (rocket.y < 2499000){
+			if (rocket.velY < -0.45){
+				System.out.println("main thrust half ");
+				rocket.mainThrusthalf();
 			}
 		}
+
 
 	}
 
