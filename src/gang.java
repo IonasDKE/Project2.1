@@ -286,12 +286,12 @@ public class gang extends Application{
 				System.out.println("main thrust");
 				rocket.mainThrust();
 			}
-		}else if(rocket.y < 2600000 && rocket.y > 2500000){
-			if (rocket.velY < -50){
+		}else if(rocket.y < 2600000 && rocket.y > 2500150){
+			if (rocket.velY < -20){
 				System.out.println("main thrust 25 ");
 				rocket.mainThrust();
 			}
-		}else if (rocket.y < 2499000){
+		}else if (rocket.y < 2500150){
 			if (rocket.velY < -0.45){
 				System.out.println("main thrust half ");
 				rocket.mainThrusthalf();
