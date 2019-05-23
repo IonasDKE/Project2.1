@@ -41,6 +41,7 @@ public class LandingModule extends Planet{
         double dY = Math.cos(angle + Math.PI/2)*distance;
         velX += dX/SolarSystem.timestep;
         velY += dY/SolarSystem.timestep;
+        System.out.println("Left thrust " + dX/SolarSystem.timestep);
     }
     public void rightThrustAndMove()
     {
@@ -52,6 +53,7 @@ public class LandingModule extends Planet{
         double dY = Math.cos(angle - Math.PI/2)*distance;
         velX += dX/SolarSystem.timestep;
         velY += dY/SolarSystem.timestep;
+        System.out.println("right thrust " + dX/SolarSystem.timestep);
     }
 
     public void mainThrust()
@@ -64,6 +66,7 @@ public class LandingModule extends Planet{
         double dY = Math.cos(angle)*distance;
         velX += dX/SolarSystem.timestep;
         velY += dY/SolarSystem.timestep;
+
     }
     public void mainThrusthalf()
     {

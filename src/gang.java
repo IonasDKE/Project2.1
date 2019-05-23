@@ -260,7 +260,7 @@ public class gang extends Application{
 
 		Point modulePosition = new Point(rocket.x, rocket.y);
 		//System.out.println("angle = " + modulePosition.getAngle(TitanPosition));
-		System.out.println("velY : " + rocket.velY );
+		//System.out.println("velY : " + rocket.velY );
 
 		if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE - ANGLE_DERIVATION && modulePosition.getAngle(TitanPosition) > STARTING_ANGLE) {
 			//Need to adjust angle from right side
@@ -272,29 +272,32 @@ public class gang extends Application{
 			//System.out.println("left angle correction");
 			rocket.leftThrust();
 			guiRocket.getTransforms().add(new Rotate(Math.PI/180, rocket.x, rocket.y));
-		}else{}
+		}
 
 		if (rocket.x > STARTING_POSITION + POSITION_DERIVATION){
 			//Need to thrust right
+			System.out.println("right position correction " + rocket.x);
 			rocket.rightThrustAndMove();
+
 		} else if (rocket.x < STARTING_POSITION - POSITION_DERIVATION) {
 			//Need to thrust left
+			System.out.println("left position correction " + rocket.x);
 			rocket.leftThrustAndMove();
-		} else {}
+		}
 
 		if (rocket.y  < 3500000 && rocket.y > 2600000){
 			if (rocket.velY < -100){
-				System.out.println("main thrust");
+				//System.out.println("main thrust");
 				rocket.mainThrust();
 			}
 		}else if(rocket.y < 2600000 && rocket.y > 2500000){
 			if (rocket.velY < -50){
-				System.out.println("main thrust 25 ");
+				//System.out.println("main thrust second ");
 				rocket.mainThrust();
 			}
 		}else if (rocket.y < 2499000){
 			if (rocket.velY < -0.45){
-				System.out.println("main thrust half ");
+				//System.out.println("main thrust half ");
 				rocket.mainThrusthalf();
 			}
 		}
