@@ -331,7 +331,7 @@ public class gang extends Application{
 		double dX=0;
 		double dY=0;
 		//F = S*Am*a^2 - S is the area "hit by the wind", Am is air density, a^2 speed of the wind in m/s
-		if(D>distanceToSurface)
+		if(distanceToSurface>1000000)
 		{
 			Am=Math.pow(10,-10);
 			windSpeed = Math.random()*10;
