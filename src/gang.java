@@ -25,13 +25,13 @@ import static java.lang.Math.abs;
 import static java.lang.Math.sqrt;
 
 public class gang extends Application{
-	int offX=600, offY=600;
-	int oldOffX=600, oldOffY=600;
-	double scale=Math.pow(10,-5);
+	int offX=500, offY=500;
+	int oldOffX=500, oldOffY=500;
+	double scale=Math.pow(10,-4);
 	int fstClickX, fstClickY;
 	SolarSystem s = new SolarSystem();
 	int zoommax=0;
-	double diameter=6490000*scale;
+	double diameter=694;
 
 	int secondsPassed=0;
 
@@ -43,8 +43,8 @@ public class gang extends Application{
 		makePlanets();
 		LandingModule rocketControler = (LandingModule)s.planetaryObjects.get(1);
 		Polygon rocket = new Polygon();
-		double xModule = (int)(offX-diameter/2+s.planetaryObjects.get(1).x*scale);
-		double yModule = (int)(offY-diameter/2+s.planetaryObjects.get(1).y*scale);
+		double xModule = offX-diameter/2+s.planetaryObjects.get(1).x*scale;
+		double yModule = offY-diameter/2+s.planetaryObjects.get(1).y*scale;
 		double xModuleLeft = xModule+5;
 		double yModuleLeft = yModule-5;
 		double xModuleRight = xModule-5;
@@ -82,11 +82,11 @@ public class gang extends Application{
 							Thread.currentThread().interrupt();
 						}
 					}
-					if(Math.random()<0.9) {
-						wind(rocketControler, D);
-					}
-					//openLoopController(rocketControler);
-					closeLoopController(rocketControler,rocket, xModule, yModule, D);
+					//if(Math.random()<0.9) {
+					//	wind(rocketControler, D);
+					//}
+					openLoopController(rocketControler);
+					//closeLoopController(rocketControler,rocket, xModule, yModule, D);
 
 
 					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
@@ -215,12 +215,12 @@ public class gang extends Application{
 				planet.setRadius(diameter);
 
 
-				if (p.name == "centerTitan") {
+				/*if (p.name == "centerTitan") {
 
 					PhongMaterial material = new PhongMaterial();
 					material.setDiffuseMap(new Image("http://westciv.com/images/wdblogs/radialgradients/simpleclorstops.png"));
 					planet.setMaterial(material);
-				}
+				}*/
 
 				planets.add(planet);
 			}
