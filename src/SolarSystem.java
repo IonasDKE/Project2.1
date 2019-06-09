@@ -37,7 +37,7 @@ public class SolarSystem {
 	ArrayList<Planet> planetaryObjects = new ArrayList<Planet>();
 	static float timestep=0.5f;
 
-	public SolarSystem(){
+	public SolarSystem(String type){
 
 		Planet Sun = new Planet("Sun",1.989 *Math.pow(10,30),0,0,0,0);
 
@@ -72,48 +72,49 @@ public class SolarSystem {
 
 
 		planetaryObjects = new ArrayList<Planet>();
-		/*planetaryObjects.add(Sun);
-		planetaryObjects.add(Mars);
-		planetaryObjects.add(Phobos);
-		planetaryObjects.add(Deimos);
+		if(type.equals("wholeSystem")) {
+			planetaryObjects.add(Sun);
+			planetaryObjects.add(Mars);
+			planetaryObjects.add(Phobos);
+			planetaryObjects.add(Deimos);
 
-		planetaryObjects.add(Earth);
-		planetaryObjects.add(Moon);
+			planetaryObjects.add(Earth);
+			planetaryObjects.add(Moon);
 
-		planetaryObjects.add(Jupiter);
-		planetaryObjects.add(Io);
-		planetaryObjects.add(Europa);
-		planetaryObjects.add(Ganymede);
-		planetaryObjects.add(Callisto);
+			planetaryObjects.add(Jupiter);
+			planetaryObjects.add(Io);
+			planetaryObjects.add(Europa);
+			planetaryObjects.add(Ganymede);
+			planetaryObjects.add(Callisto);
 
-		planetaryObjects.add(Saturn);
-		planetaryObjects.add(Tethys);
-		planetaryObjects.add(Mimas);
-		planetaryObjects.add(Enceladus);
-		planetaryObjects.add(Dione);
-		planetaryObjects.add(Rhea);
-		planetaryObjects.add(Titan);
+			planetaryObjects.add(Saturn);
+			planetaryObjects.add(Tethys);
+			planetaryObjects.add(Mimas);
+			planetaryObjects.add(Enceladus);
+			planetaryObjects.add(Dione);
+			planetaryObjects.add(Rhea);
+			planetaryObjects.add(Titan);
 
 
-		planetaryObjects.add(Uranus);
+			planetaryObjects.add(Uranus);
 
-		planetaryObjects.add(Neptune);
+			planetaryObjects.add(Neptune);
 
-		planetaryObjects.add(Mercury);
+			planetaryObjects.add(Mercury);
 
-		planetaryObjects.add(Venus);
-		*/
-
-		planetaryObjects.add(centerTitan);
-		planetaryObjects.add(Lander);
+			planetaryObjects.add(Venus);
+		} else if(type.equals("landingSystem")) {
+			planetaryObjects.add(centerTitan);
+			planetaryObjects.add(Lander);
+		}
 
 	}
 
 	void firstUpdate() {
 		for (int i=0;i<planetaryObjects.size();i++) {
 			// x_i_1 = x_i + c1*v_i*timestep
-			planetaryObjects.get(i).oldX =planetaryObjects.get(i).x+ timestep * c1*planetaryObjects.get(i).velX;
-			planetaryObjects.get(i).oldY =planetaryObjects.get(i).y+ timestep * c1*planetaryObjects.get(i).velY;
+			planetaryObjects.get(i).setOldX(planetaryObjects.get(i).getX()+ timestep * c1*planetaryObjects.get(i).getVelX());
+			planetaryObjects.get(i).setOldY(planetaryObjects.get(i).getY()+ timestep * c1*planetaryObjects.get(i).getVelY());
 
 		}
 	}
@@ -124,23 +125,23 @@ public class SolarSystem {
 
 		for (int i = 0; i < planetaryObjects.size(); i++) {
 
-			planetaryObjects.get(i).accX = 0;
-			planetaryObjects.get(i).accY = 0;
+			planetaryObjects.get(i).setAccX(0);
+			planetaryObjects.get(i).setAccY(0);
 
 				for (int j = 0; j < planetaryObjects.size(); j++) {
 					if (i != j) {
-							dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
-							dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
+							dx = planetaryObjects.get(j).getOldX() - planetaryObjects.get(i).getOldX();
+							dy = planetaryObjects.get(j).getOldY() - planetaryObjects.get(i).getOldY();
 							D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-							if(planetaryObjects.get(i).name=="Lander")
+							if(planetaryObjects.get(i).getName().equals("Lander"))
 							{
 								A = 1.352;
 							} else {
-								A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+								A = G * planetaryObjects.get(j).getMass() / Math.pow(D, 2);
 							}
 
-							planetaryObjects.get(i).accX += dx * A / D;
-							planetaryObjects.get(i).accY += dy * A / D;
+							planetaryObjects.get(i).setAccX(planetaryObjects.get(i).getAccX() + dx * A / D);
+							planetaryObjects.get(i).setAccY(planetaryObjects.get(i).getAccY() + dy * A / D);
 
 					}
 				}
@@ -153,17 +154,16 @@ public class SolarSystem {
 	{
 		for(int i=0; i<planetaryObjects.size();i++)
 		{
-			planetaryObjects.get(i).velX+= w1*planetaryObjects.get(i).accX*timestep;
-			planetaryObjects.get(i).velY+= w1*planetaryObjects.get(i).accY*timestep;
+			planetaryObjects.get(i).setVelX(planetaryObjects.get(i).getVelX()+w1*planetaryObjects.get(i).getAccX()*timestep);
+			planetaryObjects.get(i).setVelY(planetaryObjects.get(i).getVelY()+w1*planetaryObjects.get(i).getAccY()*timestep);
 		}
 	}
 
 	void fourthUpdate() {
 		for (int i=0;i<planetaryObjects.size();i++) {
 			// x_i_2 = x_i_1 + c2*v_i_1*timestep
-			planetaryObjects.get(i).oldX += timestep * c2*planetaryObjects.get(i).velX;
-			planetaryObjects.get(i).oldY += timestep * c2*planetaryObjects.get(i).velY;
-
+			planetaryObjects.get(i).setOldX(planetaryObjects.get(i).getOldX()+timestep * c2*planetaryObjects.get(i).getVelX());
+			planetaryObjects.get(i).setOldY(planetaryObjects.get(i).getOldY()+timestep * c2*planetaryObjects.get(i).getVelY());
 		}
 	}
 
@@ -174,22 +174,24 @@ public class SolarSystem {
 
 		for (int i = 0; i < planetaryObjects.size(); i++) {
 
-			planetaryObjects.get(i).accX = 0;
-			planetaryObjects.get(i).accY = 0;
+			planetaryObjects.get(i).setAccX(0);
+			planetaryObjects.get(i).setAccY(0);
 
 			for (int j = 0; j < planetaryObjects.size(); j++) {
 				if (i != j) {
-					dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
-					dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
+					dx = planetaryObjects.get(j).getOldX() - planetaryObjects.get(i).getOldX();
+					dy = planetaryObjects.get(j).getOldY() - planetaryObjects.get(i).getOldY();
 					D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-					if(planetaryObjects.get(i).name=="Lander")
+					if(planetaryObjects.get(i).getName().equals("Lander"))
 							{
 								A = 1.352;
 							} else {
-								A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+								A = G * planetaryObjects.get(j).getMass() / Math.pow(D, 2);
 							}
-					planetaryObjects.get(i).accX += dx * A / D;
-					planetaryObjects.get(i).accY += dy * A / D;
+
+					planetaryObjects.get(i).setAccX(planetaryObjects.get(i).getAccX()+ dx * A / D);
+					planetaryObjects.get(i).setAccY(planetaryObjects.get(i).getAccY()+ dy * A / D);
+
 				}
 			}
 
@@ -201,41 +203,41 @@ public class SolarSystem {
 		// v_i_2 = v_i_1+ w0*a*timestep
 		for(int i=0; i<planetaryObjects.size();i++)
 		{
-			planetaryObjects.get(i).velX+= w0*planetaryObjects.get(i).accX*timestep;
-			planetaryObjects.get(i).velY+= w0*planetaryObjects.get(i).accY*timestep;
+			planetaryObjects.get(i).setVelX(planetaryObjects.get(i).getVelX()+w0*planetaryObjects.get(i).getAccX()*timestep);
+			planetaryObjects.get(i).setVelY(planetaryObjects.get(i).getVelY()+w0*planetaryObjects.get(i).getAccY()*timestep);
 		}
 	}
 
 	void seventhUpdate() {
 		for (int i=0;i<planetaryObjects.size();i++) {
 			// x_i_3 = x_i_2 + c2*v_i_2*timestep
-			planetaryObjects.get(i).oldX += timestep * c2*planetaryObjects.get(i).velX;
-			planetaryObjects.get(i).oldY += timestep * c2*planetaryObjects.get(i).velY;
-
+			planetaryObjects.get(i).setOldX(planetaryObjects.get(i).getOldX()+timestep * c2*planetaryObjects.get(i).getVelX());
+			planetaryObjects.get(i).setOldY(planetaryObjects.get(i).getOldY()+timestep * c2*planetaryObjects.get(i).getVelY());
 		}
 	}
+
 	void eightUpdate() {
 		// a -> a(x_i_3)
 		double dx, dy, dz, D, A;
 
 		for (int i = 0; i < planetaryObjects.size(); i++) {
 
-			planetaryObjects.get(i).accX = 0;
-			planetaryObjects.get(i).accY = 0;
+			planetaryObjects.get(i).setAccX(0);
+			planetaryObjects.get(i).setAccY(0);
 
 			for (int j = 0; j < planetaryObjects.size(); j++) {
 				if (i != j) {
-					dx = planetaryObjects.get(j).oldX - planetaryObjects.get(i).oldX;
-					dy = planetaryObjects.get(j).oldY - planetaryObjects.get(i).oldY;
+					dx = planetaryObjects.get(j).getOldX() - planetaryObjects.get(i).getOldX();
+					dy = planetaryObjects.get(j).getOldY() - planetaryObjects.get(i).getOldY();
 					D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-					if(planetaryObjects.get(i).name=="Lander")
+					if(planetaryObjects.get(i).getName().equals("Lander"))
 							{
 								A = 1.352;
 							} else {
-								A = G * planetaryObjects.get(j).mass / Math.pow(D, 2);
+								A = G * planetaryObjects.get(j).getMass() / Math.pow(D, 2);
 							}
-					planetaryObjects.get(i).accX += dx * A / D;
-					planetaryObjects.get(i).accY += dy * A / D;
+					planetaryObjects.get(i).setAccX(planetaryObjects.get(i).getAccX() + dx * A / D);
+					planetaryObjects.get(i).setAccY(planetaryObjects.get(i).getAccY() + dy * A / D);
 				}
 			}
 
@@ -246,17 +248,16 @@ public class SolarSystem {
 		// v_i_3 = v_i_2 + w1*a*timestep
 		for(int i=0; i<planetaryObjects.size();i++)
 		{
-			planetaryObjects.get(i).velX+= w1*planetaryObjects.get(i).accX*timestep;
-			planetaryObjects.get(i).velY+= w1*planetaryObjects.get(i).accY*timestep;
+			planetaryObjects.get(i).setVelX(planetaryObjects.get(i).getVelX() + w1*planetaryObjects.get(i).getAccX()*timestep);
+			planetaryObjects.get(i).setVelY(planetaryObjects.get(i).getVelY() + w1*planetaryObjects.get(i).getAccY()*timestep);
 		}
 	}
 
 	void move() {
 		// x_(i+1) = x_i_3 + c1*v_i_3*timestep;
 		for (int i=0;i<planetaryObjects.size();i++) {
-			planetaryObjects.get(i).x = planetaryObjects.get(i).oldX+ timestep * c1*planetaryObjects.get(i).velX;
-			planetaryObjects.get(i).y = planetaryObjects.get(i).oldY+ timestep * c1*planetaryObjects.get(i).velY;
-
+			planetaryObjects.get(i).setX(planetaryObjects.get(i).getOldX()+ timestep * c1*planetaryObjects.get(i).getVelX());
+			planetaryObjects.get(i).setY(planetaryObjects.get(i).getOldY()+ timestep * c1*planetaryObjects.get(i).getVelY());
 		}
 	}
 	void updatePositions(){

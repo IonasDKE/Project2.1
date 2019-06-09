@@ -5,31 +5,23 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.Scene;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.Polygon;
 import javafx.scene.paint.Color;
-import javafx.scene.transform.*;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.Camera;
 import javafx.scene.PerspectiveCamera;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
-
-import static java.lang.Math.abs;
-import static java.lang.Math.sqrt;
 
 public class gang extends Application{
 	int offX=950, offY=600;
 	int oldOffX=500, oldOffY=500;
 	double scale=Math.pow(10,-4);
 	int fstClickX, fstClickY;
-	SolarSystem s = new SolarSystem();
+	SolarSystem wholeSystem = new SolarSystem("wholeSystem");
+	SolarSystem landingSystem = new SolarSystem("landingSystem");
 	int zoommax=0;
 	double diameter=694;
 
@@ -41,10 +33,10 @@ public class gang extends Application{
 	public void start(Stage primaryStage) {
 
 		makePlanets();
-		LandingModule rocketControler = (LandingModule)s.planetaryObjects.get(1);
+		LandingModule rocketControler = (LandingModule)landingSystem.planetaryObjects.get(1);
 		Polygon rocket = new Polygon();
-		double xModule = offX-diameter/2+s.planetaryObjects.get(1).x*scale;
-		double yModule = offY-diameter/2+s.planetaryObjects.get(1).y*scale;
+		double xModule = offX-diameter/2+landingSystem.planetaryObjects.get(1).getX()*scale;
+		double yModule = offY-diameter/2+landingSystem.planetaryObjects.get(1).getY()*scale;
 		double xModuleLeft = xModule+5;
 		double yModuleLeft = yModule-5;
 		double xModuleRight = xModule-5;
@@ -61,41 +53,15 @@ public class gang extends Application{
 				new KeyFrame(Duration.millis(2), t -> {
 					//Put here the code which is supposed to be repeated(or check the x,y coordinates and decide when to thrust)
 
-					s.updatePositions();
-					secondsPassed++;
+					landingSystem.updatePositions();
 
-					double dx = s.planetaryObjects.get(0).x - s.planetaryObjects.get(1).x;
-					double dy = s.planetaryObjects.get(0).y - s.planetaryObjects.get(1).y;
-					double D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-					if(D<=2500000)
-					{
-						System.out.println("VelY " +/*s.planetaryObjects.get(1).velX + " " + */s.planetaryObjects.get(1).velY);
-						System.out.println("x : " + s.planetaryObjects.get(1).x + "y : " + s.planetaryObjects.get(1).y);
-						try
-						{
-							System.out.println("d = " +D);
-							System.out.println("Second passed " +secondsPassed);
-							Thread.sleep(20000);
-						}
-						catch(InterruptedException ex)
-						{
-							Thread.currentThread().interrupt();
-						}
-					}
-					//if(Math.random()<0.9) {
-					//	wind(rocketControler, D);
-					//}
-					openLoopController(rocketControler);
-					//closeLoopController(rocketControler,rocket, xModule, yModule, D);
-
-
-					rocket.setTranslateX(s.planetaryObjects.get(1).x*scale);
-					rocket.setTranslateY(s.planetaryObjects.get(1).y*scale);
+					rocket.setTranslateX(landingSystem.planetaryObjects.get(1).getX()*scale);
+					rocket.setTranslateY(landingSystem.planetaryObjects.get(1).getY()*scale);
 
 					for(int j=0;j<planets.size();j++)
 					{
-						planets.get(j).setTranslateX(offX-diameter/2+s.planetaryObjects.get(j).x*scale);
-						planets.get(j).setTranslateY(offY-diameter/2+s.planetaryObjects.get(j).y*scale);
+						planets.get(j).setTranslateX(offX-diameter/2+landingSystem.planetaryObjects.get(j).getX()*scale);
+						planets.get(j).setTranslateY(offY-diameter/2+landingSystem.planetaryObjects.get(j).getY()*scale);
 					}
 				})
 		);
@@ -131,8 +97,8 @@ public class gang extends Application{
 					break;
 				case T:
 					scale=10*Math.pow(10,-8);
-                	camera.translateXProperty().set((int)(diameter/2+s.planetaryObjects.get(11).x*scale));
-                	camera.translateYProperty().set((int)(diameter/2+s.planetaryObjects.get(11).y*scale));
+                	camera.translateXProperty().set((int)(diameter/2+landingSystem.planetaryObjects.get(11).getX()*scale));
+                	camera.translateYProperty().set((int)(diameter/2+landingSystem.planetaryObjects.get(11).getY()*scale));
 
 					camera.translateZProperty().set(500);
 					break;
@@ -146,8 +112,8 @@ public class gang extends Application{
 					break;
 				case E:
                 	scale=10*Math.pow(10,-8);
-                	camera.translateXProperty().set((int)(diameter/2+s.planetaryObjects.get(4).x*scale));
-                	camera.translateYProperty().set((int)(diameter/2+s.planetaryObjects.get(4).y*scale));
+                	camera.translateXProperty().set((int)(diameter/2+landingSystem.planetaryObjects.get(4).getX()*scale));
+                	camera.translateYProperty().set((int)(diameter/2+landingSystem.planetaryObjects.get(4).getY()*scale));
 					camera.translateZProperty().set(500);
 					break;
 			}
@@ -178,21 +144,17 @@ public class gang extends Application{
 
 		planets.clear();
 
-		for(Planet p : s.planetaryObjects)
+		for(Planet p : landingSystem.planetaryObjects)
 		{
-			if(p.name!="Lander") {
+			if(p.getName()!="Lander") {
 				Sphere planet = new Sphere();
-				planet.setTranslateX((int) (offX - diameter / 2 + p.x * scale));
-				planet.setTranslateY((int) (offY - diameter / 2 + p.y * scale));
+				planet.setTranslateX((int) (offX - diameter / 2 + p.getX() * scale));
+				planet.setTranslateY((int) (offY - diameter / 2 + p.getY() * scale));
 
-				int a = (int) (offX - diameter / 2 + p.x * scale);
-				int b = (int) (offY - diameter / 2 + p.y * scale);
-
-				//System.out.println(a + " " + b);
 				planet.setRadius(diameter);
 
 
-				if (p.name == "centerTitan") {
+				if (p.getName().equals("centerTitan")) {
 
 					PhongMaterial material = new PhongMaterial();
 					material.setDiffuseMap(new Image("/titan.jpg"));
@@ -204,97 +166,8 @@ public class gang extends Application{
 		}
 	}
 
-	public void openLoopController(LandingModule rocketControler)
-	{
-		if(secondsPassed>2525)
-		{
-			if(secondsPassed<4671) {
-				rocketControler.mainThrust();
-			}
-			else  if(secondsPassed<=4850){
-				rocketControler.mainThrusthalf();
-			} else if(secondsPassed==4851)
-			{
-				rocketControler.mainThrust();
-			}
-		}
-	}
-
 	public static void main(String[] args) {
 		launch(args);
-
-	}
-
-	public void closeLoopController(LandingModule rocket, Polygon guiRocket, double xModule, double yModule, double distanceToSurface){
-
-		//System.out.println("x : "+rocket.x + " y = " + rocket.y);
-
-		Point TitanPosition = new Point(s.planetaryObjects.get(0).x, s.planetaryObjects.get(0).y);
-		final double STARTING_POSITION = 0;
-		final double POSITION_DERIVATION = 1;
-
-		final double STARTING_ANGLE = -90;
-		final double ANGLE_DERIVATION = 1;
-
-		Point modulePosition = new Point(rocket.x, rocket.y);
-		//System.out.println("angle = " + modulePosition.getAngle(TitanPosition));
-		System.out.println("velY : " + rocket.velY );
-
-		if (modulePosition.getAngle(TitanPosition) < STARTING_ANGLE - ANGLE_DERIVATION && modulePosition.getAngle(TitanPosition) > STARTING_ANGLE) {
-			//Need to adjust angle from right side
-			//System.out.println("right angle correction");
-			rightThrust(guiRocket, rocket, xModule, yModule);
-		} else if (modulePosition.getAngle(TitanPosition) > STARTING_ANGLE + ANGLE_DERIVATION && modulePosition.getAngle(TitanPosition) < STARTING_ANGLE) {
-			//Need to thrust left
-			//System.out.println("left angle correction");
-			leftThrust(guiRocket, rocket, xModule, yModule);
-		}else{}
-
-		if (rocket.x > STARTING_POSITION + POSITION_DERIVATION){
-			//Need to thrust right
-			rocket.leftThrustAndMove();
-		} else if (rocket.x < STARTING_POSITION - POSITION_DERIVATION) {
-			//Need to thrust left
-			rocket.rightThrustAndMove();
-		} else {}
-
-		if (distanceToSurface  < 3500000 && distanceToSurface > 2600000){
-			if (rocket.velY < -100){
-				System.out.println("main thrust");
-				rocket.mainThrust();
-			}
-		}else if(distanceToSurface < 2600000 && distanceToSurface > 2501000){
-			if (rocket.velY < -50){
-				System.out.println("main thrust 25 ");
-				rocket.mainThrust();
-			}
-		}else if (distanceToSurface < 2501000 && distanceToSurface > 2500500){
-			if (rocket.velY < -20){
-				System.out.println("main thrust half ");
-				rocket.mainThrust();
-			}
-		} else if(distanceToSurface < 2500500 && distanceToSurface > 2500150){
-			if (rocket.velY < -10){
-				System.out.println("main thrust half ");
-				rocket.mainThrust();
-			}
-		} else if(distanceToSurface < 2500150 && distanceToSurface > 2500015){
-			if (rocket.velY < -5){
-				System.out.println("main thrust half ");
-				rocket.mainThrust();
-			}
-		} else if(distanceToSurface < 2500015 && distanceToSurface > 2500007){
-			if (rocket.velY < -1){
-				System.out.println("main thrust half ");
-				rocket.mainThrust();
-			}
-		} else if(distanceToSurface < 2500007){
-			if (rocket.velY < -0.1){
-				System.out.println(distanceToSurface);
-				rocket.mainThrusthalf();
-			}
-		}
-
 
 	}
 
@@ -328,20 +201,10 @@ public class gang extends Application{
 		double vel=acc*SolarSystem.timestep;
 		double distance = vel*SolarSystem.timestep;
 
-		dX = Math.sin(-(rocket.angle + (Math.PI / 2))) * distance;
-		dY = Math.cos(rocket.angle + Math.PI / 2) * distance;
+		dX = Math.sin(-(rocket.getAngle() + (Math.PI / 2))) * distance;
+		dY = Math.cos(rocket.getAngle() + Math.PI / 2) * distance;
 
-		rocket.velX += dX/SolarSystem.timestep;
-		rocket.velY += dY/SolarSystem.timestep;
-	}
-	public void leftThrust(Polygon rocket, LandingModule rocketControler, double xModule, double yModule)
-	{
-		rocketControler.leftThrust();
-		rocket.getTransforms().add(new Rotate(rocketControler.angle, xModule, yModule));
-	}
-	public void rightThrust(Polygon rocket, LandingModule rocketControler, double xModule, double yModule)
-	{
-		rocketControler.rightThrust();
-		rocket.getTransforms().add(new Rotate(rocketControler.angle, xModule, yModule));
+		rocket.setVelX(rocket.getVelX() + dX/SolarSystem.timestep);
+		rocket.setVelY(rocket.getVelY() + dY/SolarSystem.timestep);
 	}
 }
