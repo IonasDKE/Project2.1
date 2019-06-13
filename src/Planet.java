@@ -18,7 +18,7 @@ class Point{
 	}
 }
 
-public class Planet {
+public class Planet extends CelestialBody {
 	String name;
 	double mass, x, y, velX, velY, afelio, accX, accY, oldAccX, oldAccY,oldX,oldY;
 	LinkedList<Point> positions = new LinkedList<Point>();
