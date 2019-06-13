@@ -13,6 +13,8 @@ class Point{
 		return Math.toDegrees(Math.atan2(yDiff, xDiff));
 	}
 
+
+
 	public void setX(double x)
 	{
 		this.x=x;

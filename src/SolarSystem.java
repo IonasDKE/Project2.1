@@ -261,6 +261,7 @@ public class SolarSystem {
 		}
 	}
 	void updatePositions(){
+
 		firstUpdate();
 		secondUpdate();
 		thirdUpdate();
