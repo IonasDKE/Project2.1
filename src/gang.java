@@ -23,6 +23,7 @@ public class gang extends Application{
 	double scale=10*Math.pow(10,-10);
 	int fstClickX, fstClickY;
 	SolarSystem s = new SolarSystem();
+	ArrayList<CelestialBody> planetaryObjects=s.getObjects();
 	int zoommax=0;
 	double diameter=3;
 	ArrayList<Sphere> planets = new ArrayList<Sphere>();
@@ -32,25 +33,24 @@ public class gang extends Application{
 	public void start(Stage primaryStage) {
 
 		makePlanets();
-
 		Polygon rocket = new Polygon();
-		double xModule = offX-diameter/2+s.planetaryObjects.get(17).x*scale;
-		double yModule = offY-diameter/2+s.planetaryObjects.get(17).y*scale;
-		double xModuleLeft = offX-diameter/2+s.planetaryObjects.get(17).x*scale+10;
-		double yModuleLeft = offY-diameter/2+s.planetaryObjects.get(17).y*scale+20;
-		double xModuleRight = offX-diameter/2+s.planetaryObjects.get(17).x*scale+20;
-		double yModuleRight = offY-diameter/2+s.planetaryObjects.get(17).y*scale+10;
+		double xModule = offX-diameter/2+planetaryObjects.get(17).x*scale;
+		double yModule = offY-diameter/2+planetaryObjects.get(17).y*scale;
+		double xModuleLeft = offX-diameter/2+planetaryObjects.get(17).x*scale+10;
+		double yModuleLeft = offY-diameter/2+planetaryObjects.get(17).y*scale+20;
+		double xModuleRight = offX-diameter/2+planetaryObjects.get(17).x*scale+20;
+		double yModuleRight = offY-diameter/2+planetaryObjects.get(17).y*scale+10;
 		System.out.println(yModuleLeft);
 		System.out.println(yModuleRight);
 
 
-		rocket.getPoints().addAll(new Double[]{
-				xModule, yModule,
-				xModuleRight, yModuleRight,
-				xModuleLeft, yModuleLeft });
-		rocket.setFill(Color.RED);
+        rocket.getPoints().addAll(new Double[]{
+            xModule, yModule,
+            xModuleRight, yModuleRight,
+            xModuleLeft, yModuleLeft });
+        rocket.setFill(Color.RED);
 
-		rocket.setTranslateY(10);
+        rocket.setTranslateY(10);
 
 
 		Timeline timeline = new Timeline(
@@ -59,10 +59,10 @@ public class gang extends Application{
 					for(int j=0;j<planets.size();j++)
 					{
 						s.updatePositions();
-						planets.get(j).setTranslateX(offX-diameter/2+s.planetaryObjects.get(j).x*scale);
-						planets.get(j).setTranslateY(offY-diameter/2+s.planetaryObjects.get(j).y*scale);
-						names.get(j).setTranslateX(offX-diameter/2+s.planetaryObjects.get(j).x*scale);
-						names.get(j).setTranslateY(offY-diameter/2+s.planetaryObjects.get(j).y*scale);
+						planets.get(j).setTranslateX(offX-diameter/2+planetaryObjects.get(j).x*scale);
+						planets.get(j).setTranslateY(offY-diameter/2+planetaryObjects.get(j).y*scale);
+						names.get(j).setTranslateX(offX-diameter/2+planetaryObjects.get(j).x*scale);
+						names.get(j).setTranslateY(offY-diameter/2+planetaryObjects.get(j).y*scale);
 					}
 				})
 		);
@@ -80,11 +80,11 @@ public class gang extends Application{
 
 		Camera camera = new PerspectiveCamera(false);
 
-		scene.setCamera(camera);
+     	scene.setCamera(camera);
 
-		camera.translateZProperty().set(-500);
-		//camera.setNearClip(1);
-		camera.setFarClip(5000);
+     	camera.translateZProperty().set(-500);
+     	//camera.setNearClip(1);
+     	camera.setFarClip(5000);
 
 		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 			switch (event.getCode()) {
@@ -99,42 +99,42 @@ public class gang extends Application{
 					break;
 				case T:
 					scale=10*Math.pow(10,-8);
-					camera.translateXProperty().set((int)(diameter/2+s.planetaryObjects.get(11).x*scale));
-					camera.translateYProperty().set((int)(diameter/2+s.planetaryObjects.get(11).y*scale));
+                	camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(11).x*scale));
+                	camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(11).y*scale));
 
 					camera.translateZProperty().set(500);
 					break;
 
 				case S:
-					scale=10*Math.pow(10,-10);
-					camera.translateXProperty().set(0);
-					camera.translateYProperty().set(0);
+                	scale=10*Math.pow(10,-10);
+                	camera.translateXProperty().set(0);
+                	camera.translateYProperty().set(0);
 					scale=10*Math.pow(10,-10);
 					camera.translateZProperty().set(500);
 					break;
 				case E:
-					scale=10*Math.pow(10,-8);
-					camera.translateXProperty().set((int)(diameter/2+s.planetaryObjects.get(4).x*scale));
-					camera.translateYProperty().set((int)(diameter/2+s.planetaryObjects.get(4).y*scale));
+                	scale=10*Math.pow(10,-8);
+                	camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(4).x*scale));
+                	camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(4).y*scale));
 					camera.translateZProperty().set(500);
 					break;
 			}
-		});
+        });
 
 
-		primaryStage.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
-			fstClickX=(int)(event.getX());
-			System.out.println(fstClickX);
-			fstClickY=(int)(event.getY());
+        primaryStage.addEventHandler(MouseEvent.MOUSE_PRESSED, event -> {
+                fstClickX=(int)(event.getX());
+                System.out.println(fstClickX);
+		 		fstClickY=(int)(event.getY());
 
-		});
+        });
 
 
-		primaryStage.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
-			camera.translateXProperty().set(-(((int)(event.getX())-camera.getTranslateX())-fstClickX));
-			camera.translateYProperty().set(-(((int)(event.getY())-camera.getTranslateY())-fstClickY));
+         primaryStage.addEventHandler(MouseEvent.MOUSE_DRAGGED, event -> {
+                camera.translateXProperty().set(-(((int)(event.getX())-camera.getTranslateX())-fstClickX));
+				camera.translateYProperty().set(-(((int)(event.getY())-camera.getTranslateY())-fstClickY));
 
-		});
+        });
 
 
 		primaryStage.setTitle("SolarSystem");
@@ -146,7 +146,7 @@ public class gang extends Application{
 
 		planets.clear();
 
-		for(Planet p : s.planetaryObjects)
+		for(CelestialBody p : planetaryObjects)
 		{
 			if(p.name!="Lander") {
 				Sphere planet = new Sphere();
