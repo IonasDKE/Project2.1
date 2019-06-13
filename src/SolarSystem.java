@@ -35,7 +35,7 @@ public class SolarSystem {
 	private static final double c1 = w1/2;
 	private static final double c2 = (w0+w1)/2;
 	private ArrayList<CelestialBody> planetaryObjects = new ArrayList<CelestialBody>();
-	private float timestep=1000f;
+	private float timestep=100f;
 	double lastPosition = 0;
 	boolean test = true;
 	boolean timeStepChange=false;
@@ -73,7 +73,7 @@ public class SolarSystem {
 		CelestialBody Venus = new Planet("Venus",4.8675*Math.pow(10,24),-2580458154.9969267845,-108701123911.93000793, 34777.284216476567963, -961.21239989254672764);
 
 		CelestialBody rocket = new Rocket("rocket",5712, -149010862150.01596069+6371000, -2126396301.1637141705, 12751.36840719167, -6.075583325887161e+04 );
-																										//11101.36840719167, -6.075583325887161e+03
+																										//11101.36840719167,         -6.075583325887161e+03
 		// From the Escape velocity of the earth, reach anywhere at (h(2000km)+r(radius of titan)) of the surface of Titan, with the velocity decreasing until 5043Km/h
 		planetaryObjects = new ArrayList<CelestialBody>();
 		planetaryObjects.add(Sun);
@@ -266,7 +266,7 @@ public class SolarSystem {
 		if(!timeStepChange)
 			check();
 
-		if()
+		//if()
 
 		firstUpdate();
 		secondUpdate();
