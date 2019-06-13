@@ -7,20 +7,14 @@ class Point{
 		this.x = x;
 		this.y = y;
 	}
-
-
-	public double checkDistance(Point T) {
-
-		double deltaX = Math.abs(this.x-T.x);
-		double deltaY = Math.abs(this.y-T.y);
+	public double checkDistance (Point T){
+		double deltaX=Math.abs(this.x-T.x);
+		double deltaY=Math.abs(this.y-T.y);
 		return Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2));
-
 	}
 }
 
 public class Planet extends CelestialBody {
-	String name;
-	double mass, x, y, velX, velY, afelio, accX, accY, oldAccX, oldAccY,oldX,oldY;
 	LinkedList<Point> positions = new LinkedList<Point>();
 	final int MAX_NUM_POINTS = 1000;
 
