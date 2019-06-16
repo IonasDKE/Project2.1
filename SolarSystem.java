@@ -37,7 +37,7 @@ public class SolarSystem {
 	private ArrayList<CelestialBody> planetaryObjects = new ArrayList<CelestialBody>();
 	private float timestep=500f;
 	double lastPosition = 0;
-	//boolean test = true;
+	boolean test = true;
 	boolean timeStepFirstChange=false;
 	boolean timeStepSecndChange=false;
 	boolean timeStepThirdChange=false;
@@ -78,7 +78,7 @@ public class SolarSystem {
 		CelestialBody Mercury = new Planet("Mercury", 3.3011*Math.pow(10,23),-58432374622.839942932,-21437816633.49621582, 6693.4979641187965171, -43627.083379485586192);
 		CelestialBody Venus = new Planet("Venus",4.8675*Math.pow(10,24),-2580458154.9969267845,-108701123911.93000793, 34777.284216476567963, -961.21239989254672764);
 
-		CelestialBody rocket = new Rocket("rocket",5712, -149010862150.01596069+6371000, -2126396301.1637141705, 12194.36840719167, -6.075583325887161e+04 );
+		CelestialBody rocket = new Rocket("rocket",5712, -149010862150.01596069+6371000, -2126396301.1637141705, 12194.96540719167, -6.075583325887161e+04 );
 																										//11101.36840719167, -6.075583325887161e+03
 		// From the Escape velocity of the earth, reach anywhere at (h(2000km)+r(radius of titan)) of the surface of Titan, with the velocity decreasing until 5043Km/h
 		planetaryObjects = new ArrayList<CelestialBody>();
@@ -257,8 +257,7 @@ public class SolarSystem {
 	public void check(){
 		Point T = new Point(planetaryObjects.get(17).x, planetaryObjects.get(17).y);
 		Point R = new Point(planetaryObjects.get(22).x, planetaryObjects.get(22).y);
-		double position = R.checkDistance(T);
-		lastPosition = position;
+
 		if (R.checkDistance(T)/1000 <= 40000000 && !timeStepFirstChange)
 		{
 			timestep = 250f;
@@ -308,7 +307,34 @@ public class SolarSystem {
 		if(!timeStepFinalChange)
 			check();
 
-		//if()
+		/* //Change instantly speed of the rocket to enter into orbit
+		if(timeStepFinalChange)
+		{
+			Point T = new Point(planetaryObjects.get(17).x, planetaryObjects.get(17).y);
+			Point R = new Point(planetaryObjects.get(22).x, planetaryObjects.get(22).y);
+			if(R.checkDistance(T)/1000 <=25000)
+			{
+				Rocket r=(Rocket) planetaryObjects.get(22);
+				planetaryObjects.get(22).velX=planetaryObjects.get(17).velX;
+				planetaryObjects.get(22).velY=0;
+			}
+		}*/
+
+		 //print the smallest distance between Titan and Rocket during journey
+		else if(test)
+		{
+			Point T = new Point(planetaryObjects.get(17).x, planetaryObjects.get(17).y);
+			Point R = new Point(planetaryObjects.get(22).x, planetaryObjects.get(22).y);
+			double position = R.checkDistance(T);
+			if (lastPosition < position && test && lastPosition != 0)
+			{
+				System.out.println();
+				System.out.println("Last position: " +lastPosition/1000);
+				System.out.println("Next position: "+position/1000);
+				test = false;
+			}
+			lastPosition = position;
+		}
 
 		firstUpdate();
 		secondUpdate();
