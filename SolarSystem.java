@@ -35,10 +35,16 @@ public class SolarSystem {
 	private static final double c1 = w1/2;
 	private static final double c2 = (w0+w1)/2;
 	private ArrayList<CelestialBody> planetaryObjects = new ArrayList<CelestialBody>();
-	private float timestep=1000f;
+	private float timestep=500f;
 	double lastPosition = 0;
-	boolean test = true;
-	boolean timeStepChange=false;
+	//boolean test = true;
+	boolean timeStepFirstChange=false;
+	boolean timeStepSecndChange=false;
+	boolean timeStepThirdChange=false;
+	boolean timeStepFourthChange=false;
+	boolean timeStepFifthChange=false;
+	boolean timeStepSixthChange=false;
+	boolean timeStepFinalChange=false;
 	//private float countTimestep=0f;
 	//private final float TRAVEL_TIME=126144000f; //4 years in seconds
 
@@ -72,7 +78,7 @@ public class SolarSystem {
 		CelestialBody Mercury = new Planet("Mercury", 3.3011*Math.pow(10,23),-58432374622.839942932,-21437816633.49621582, 6693.4979641187965171, -43627.083379485586192);
 		CelestialBody Venus = new Planet("Venus",4.8675*Math.pow(10,24),-2580458154.9969267845,-108701123911.93000793, 34777.284216476567963, -961.21239989254672764);
 
-		CelestialBody rocket = new Rocket("rocket",5712, -149010862150.01596069+6371000, -2126396301.1637141705, 12751.36840719167, -6.075583325887161e+04 );
+		CelestialBody rocket = new Rocket("rocket",5712, -149010862150.01596069+6371000, -2126396301.1637141705, 12194.36840719167, -6.075583325887161e+04 );
 																										//11101.36840719167, -6.075583325887161e+03
 		// From the Escape velocity of the earth, reach anywhere at (h(2000km)+r(radius of titan)) of the surface of Titan, with the velocity decreasing until 5043Km/h
 		planetaryObjects = new ArrayList<CelestialBody>();
@@ -253,17 +259,53 @@ public class SolarSystem {
 		Point R = new Point(planetaryObjects.get(22).x, planetaryObjects.get(22).y);
 		double position = R.checkDistance(T);
 		lastPosition = position;
-		if (R.checkDistance(T)/100000 <= 400000)
+		if (R.checkDistance(T)/1000 <= 40000000 && !timeStepFirstChange)
 		{
-			timestep = 10f;
-			timeStepChange=true;
+			timestep = 250f;
+			System.out.println("Timestep=250");
+			timeStepFirstChange=true;
+		}
+		if (R.checkDistance(T)/1000 <= 20000000 && !timeStepSecndChange)
+		{
+			timestep = 100f;
+			System.out.println("Timestep=100");
+			timeStepSecndChange=true;
+		}
+		if (R.checkDistance(T)/1000 <= 10000000 && !timeStepThirdChange)
+		{
+			timestep=50f;
+			System.out.println("Timestep=50");
+			timeStepThirdChange=true;
+		}
+		if(R.checkDistance(T)/1000 <= 5000000 && !timeStepFourthChange)
+		{
+			timestep=10f;
+			System.out.println("Timestep=10");
+			timeStepFourthChange=true;
+		}
+		if(R.checkDistance(T)/1000 <= 2500000 && !timeStepFifthChange)
+		{
+			timestep=5f;
+			timeStepFifthChange=true;
+			System.out.println("Timestep=5");
+		}
 
-
+		if(R.checkDistance(T)/1000 <= 500000 && !timeStepSixthChange)
+		{
+			timestep=1f;
+			timeStepSixthChange=true;
+			System.out.println("Timestep=1");
+		}
+		if(R.checkDistance(T)/1000 <= 100000 && !timeStepFinalChange)
+		{
+			timestep=0.5f;
+			timeStepFinalChange=true;
+			System.out.println("Timestep=0.5");
 		}
 	 }
 	void updatePositions(){
 
-		if(!timeStepChange)
+		if(!timeStepFinalChange)
 			check();
 
 		//if()
