@@ -18,14 +18,14 @@ import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
 
 public class gang extends Application{
-	int offX=950, offY=600;
-	int oldOffX=500, oldOffY=500;
-	double scale=Math.pow(10,-4);
+	int offX=600, offY=600;
+	int oldOffX=600, oldOffY=600;
+	double scale=10*Math.pow(10,-5);
 	int fstClickX, fstClickY;
 	SolarSystem wholeSystem = new SolarSystem("wholeSystem");
 	SolarSystem landingSystem = new SolarSystem("landingSystem");
 	int zoommax=0;
-	double diameter=5;
+	double diameter=193;
 	PIDController pidController = new PIDController(0.6, 175);
 
 	int secondsPassed=0;
@@ -80,13 +80,13 @@ public class gang extends Application{
 					controllerSystem(rocketControler, distanceToSurface, rocketControler.getX(), rocket, xModule, yModule);
 					secondsPassed++;
 
-					rocket.setTranslateX(landingSystem.planetaryObjects.get(1).getX()*scale);
-					rocket.setTranslateY(landingSystem.planetaryObjects.get(1).getY()*scale);
+					rocket.setTranslateX(landingSystem.planetaryObjects.get(1).getX()*scale+diameter/2);
+					rocket.setTranslateY(landingSystem.planetaryObjects.get(1).getY()*scale+diameter/2);
 
 					for(int j=0;j<planets.size();j++)
 					{
-						planets.get(j).setTranslateX(offX-diameter/2+landingSystem.planetaryObjects.get(j).getX()*scale);
-						planets.get(j).setTranslateY(offY-diameter/2+landingSystem.planetaryObjects.get(j).getY()*scale);
+						planets.get(j).setTranslateX(offX+landingSystem.planetaryObjects.get(j).getX()*scale);
+						planets.get(j).setTranslateY(offY+landingSystem.planetaryObjects.get(j).getY()*scale);
 					}
 				})
 		);
@@ -177,8 +177,8 @@ public class gang extends Application{
 		{
 			if(p.getName()!="Lander") {
 				Sphere planet = new Sphere();
-				planet.setTranslateX((int) (offX - diameter / 2 + p.getX() * scale));
-				planet.setTranslateY((int) (offY - diameter / 2 + p.getY() * scale));
+				planet.setTranslateX((int) (offX + diameter / 2 ));
+				planet.setTranslateY((int) (offY + diameter / 2 ));
 
 				planet.setRadius(diameter);
 
