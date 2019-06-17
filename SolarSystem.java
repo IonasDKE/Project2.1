@@ -45,6 +45,7 @@ public class SolarSystem {
 	boolean timeStepFifthChange=false;
 	boolean timeStepSixthChange=false;
 	boolean timeStepFinalChange=false;
+	static boolean closeToTitan= false;
 	//private float countTimestep=0f;
 	//private final float TRAVEL_TIME=126144000f; //4 years in seconds
 
@@ -281,6 +282,7 @@ public class SolarSystem {
 			timestep=10f;
 			System.out.println("Timestep=10");
 			timeStepFourthChange=true;
+			closeToTitan= true;
 		}
 		if(R.checkDistance(T)/1000 <= 2500000 && !timeStepFifthChange)
 		{
@@ -294,12 +296,14 @@ public class SolarSystem {
 			timestep=1f;
 			timeStepSixthChange=true;
 			System.out.println("Timestep=1");
+			closeToTitan= true;
 		}
 		if(R.checkDistance(T)/1000 <= 100000 && !timeStepFinalChange)
 		{
 			timestep=0.5f;
 			timeStepFinalChange=true;
 			System.out.println("Timestep=0.5");
+
 		}
 	 }
 	void updatePositions(){

@@ -25,9 +25,11 @@ public class gang extends Application{
 	SolarSystem s = new SolarSystem();
 	ArrayList<CelestialBody> planetaryObjects=s.getObjects();
 	int zoommax=0;
-	double diameter=3;
+	double diameter=5;
 	ArrayList<Sphere> planets = new ArrayList<Sphere>();
 	ArrayList<Label> names = new ArrayList<Label>();
+	boolean titanCamera = false;
+	boolean secondCheck = true;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -51,25 +53,9 @@ public class gang extends Application{
         rocket.setFill(Color.RED);
 
         rocket.setTranslateY(10);
-*/
+*/		
 
-		Timeline timeline = new Timeline(
-				new KeyFrame(Duration.millis(20), t -> {
-					//Put here the code which is supposed to be repeated(or check the x,y coordinates and decide when to thrust)
-					for(int j=0;j<planets.size();j++)
-					{
-						s.updatePositions();
-						planets.get(j).setTranslateX(offX-diameter/2+planetaryObjects.get(j).x*scale);
-						planets.get(j).setTranslateY(offY-diameter/2+planetaryObjects.get(j).y*scale);
-						names.get(j).setTranslateX(offX-diameter/2+planetaryObjects.get(j).x*scale);
-						names.get(j).setTranslateY(offY-diameter/2+planetaryObjects.get(j).y*scale);
-					}
-				})
-		);
-		timeline.setCycleCount(Animation.INDEFINITE);
-		timeline.play();
-
-		Group root = new Group();
+        Group root = new Group();
 		root.getChildren().addAll(planets);
 		//root.getChildren().addAll(rocket);
 		root.getChildren().addAll(names);
@@ -86,6 +72,49 @@ public class gang extends Application{
      	//camera.setNearClip(1);
      	camera.setFarClip(5000);
 
+     	
+		Timeline timeline = new Timeline(
+				new KeyFrame(Duration.millis(20), t -> {
+					//Put here the code which is supposed to be repeated(or check the x,y coordinates and decide when to thrust)
+					for(int j=0;j<planets.size();j++)
+					{
+						s.updatePositions();
+						planets.get(j).setTranslateX(offX-diameter/2+planetaryObjects.get(j).x*scale);
+						planets.get(j).setTranslateY(offY-diameter/2+planetaryObjects.get(j).y*scale);
+						names.get(j).setTranslateX(offX-diameter/2+planetaryObjects.get(j).x*scale);
+						names.get(j).setTranslateY(offY-diameter/2+planetaryObjects.get(j).y*scale);
+					}
+
+					if (s.closeToTitan && secondCheck){
+						scale=10*Math.pow(10,-8);
+                		camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(11).x*scale));
+                		camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(11).y*scale));
+						camera.translateZProperty().set(500);
+						s.closeToTitan=false;
+						secondCheck= false;
+					}
+
+					if (s.closeToTitan){
+						scale=10*Math.pow(10,-6);
+                		camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(17).x*scale));
+                		camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(17).y*scale));
+                		planets.get(17).setRadius(2574*10*Math.pow(10,-2));
+						camera.translateZProperty().set(500);
+						s.closeToTitan=false;
+						titanCamera=true;
+					}
+
+					if (titanCamera){
+						camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(17).x*scale));
+                		camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(17).y*scale));
+					}
+				})
+		);
+		timeline.setCycleCount(Animation.INDEFINITE);
+		timeline.play();
+
+		
+
 		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 			switch (event.getCode()) {
 				case Q:
@@ -98,10 +127,10 @@ public class gang extends Application{
 					zoommax=zoommax-500;
 					break;
 				case T:
-					scale=10*Math.pow(10,-8);
-                	camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(11).x*scale));
-                	camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(11).y*scale));
-
+					scale=10*Math.pow(10,-7);
+                	camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(17).x*scale));
+                	camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(17).y*scale));
+                	planets.get(17).setRadius(500);
 					camera.translateZProperty().set(500);
 					break;
 
@@ -116,6 +145,13 @@ public class gang extends Application{
                 	scale=10*Math.pow(10,-8);
                 	camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(4).x*scale));
                 	camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(4).y*scale));
+					camera.translateZProperty().set(500);
+					break;
+
+				case Y:
+                	scale=10*Math.pow(10,-8);
+                	camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(11).x*scale));
+                	camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(11).y*scale));
 					camera.translateZProperty().set(500);
 					break;
 			}
