@@ -134,7 +134,7 @@ public class gang extends Application{
                 case L: //Launch the rocket
                     if (!launched){
                         SolarSystem system = new SolarSystem();
-                        for (int i = 0; i < counter+(int)(6144000/SolarSystem.timestep); i ++){
+                        for (int i = 0; i < counter+(int)(189216000/SolarSystem.timestep); i ++){
                             system.updatePositions();
                         }
                         //RocketLauncher launcher = new RocketLauncher();
@@ -148,7 +148,7 @@ public class gang extends Application{
                     break;
                 case B:
                     SolarSystem system = new SolarSystem();
-                    for (int i = 0; i < counter+(int)(6144000/SolarSystem.timestep); i ++){
+                    for (int i = 0; i < counter+(int)(189216000/SolarSystem.timestep); i ++){
                         system.updatePositions();
                     }
                     launcher.launchToEarth(system.getPlanetList().get(4), s.getPlanetList().get(22));

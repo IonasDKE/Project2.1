@@ -1,5 +1,5 @@
 public class RocketLauncher {
-    int time = 6144000;   // 6years 189216000
+    int time = 189216000;   // 6years 189216000
     CelestialBody earth;
     static CelestialBody rocket;
     double angle, speed;
