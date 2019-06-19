@@ -1,4 +1,4 @@
-public class Rocket extends CelestialBody {
+public class Rocket extends  CelestialBody{
 
     public final int ORBITAL_SPEED =5043; // in km/h
     public final double ORBITAL_VEL_X=1000;
@@ -7,7 +7,7 @@ public class Rocket extends CelestialBody {
 
 
 
-    public Rocket(String name, double mass, double x, double y, double velX, double velY, double angle) {
+    public Rocket(String name, double mass, double x, double y, double velX, double velY) {
         this.name = name;
         this.mass = mass;
         this.x = x;
@@ -20,7 +20,6 @@ public class Rocket extends CelestialBody {
         this.oldAccY=0;
         this.oldX = 0;
         this.oldY=0;
-        this.angle = angle;
     }
 
     public void xThrust(double x, double y)
@@ -36,10 +35,4 @@ public class Rocket extends CelestialBody {
     public void distance(double x, double y)
     {
     }
-
-    public double getAngle(){
-        return this.angle;
-    }
-
-
 }

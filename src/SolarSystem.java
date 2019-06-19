@@ -33,8 +33,18 @@ public class SolarSystem extends CelestialBody{
     private static final double w1 = 1/(2-Math.pow(2,1/3));
     private static final double c1 = w1/2;
     private static final double c2 = (w0+w1)/2;
-    private ArrayList<CelestialBody> planetaryObjects;
+    public ArrayList<CelestialBody> planetaryObjects;
     public static float timestep = 500f;
+    boolean timeStepFirstChange=false;
+    boolean timeStepSecndChange=false;
+    boolean timeStepThirdChange=false;
+    boolean timeStepFourthChange=false;
+    boolean timeStepFifthChange=false;
+    boolean timeStepSixthChange=false;
+    boolean timeStepFinalChange=false;
+    static boolean closeToTitan= false;
+    boolean test = true;
+    double lastPosition = 0;
 
     //private float countTimestep=0f;
     //private final float TRAVEL_TIME=126144000f; //4 years in seconds
@@ -102,7 +112,6 @@ public class SolarSystem extends CelestialBody{
         planetaryObjects.add(Mercury);
 
         planetaryObjects.add(Venus);
-
     }
 
     void firstUpdate(ArrayList<CelestialBody> listOfObritalObjects) {
@@ -191,7 +200,7 @@ public class SolarSystem extends CelestialBody{
     }
 
     void seventhUpdate(ArrayList<CelestialBody> listOfObritalObjects) {
-        for (int i=0;i<planetaryObjects.size();i++) {
+        for (int i=0;i<listOfObritalObjects.size();i++) {
             // x_i_3 = x_i_2 + c2*v_i_2*timestep
             listOfObritalObjects.get(i).oldX += timestep * c2*listOfObritalObjects.get(i).velX;
             listOfObritalObjects.get(i).oldY += timestep * c2*listOfObritalObjects.get(i).velY;
@@ -238,58 +247,71 @@ public class SolarSystem extends CelestialBody{
 
         }
     }
-    /*
-    public void check(){
+
+    public void check() {
         Point T = new Point(planetaryObjects.get(17).x, planetaryObjects.get(17).y);
-        Point R = new Point(planetaryObjects.get(22).x, planetaryObjects.get(22).y);
+        Point R = new Point(RocketLauncher.rocket.x, RocketLauncher.rocket.y);
 
-        if (R.getDistance(T)/1000 <= 40000000 && !timeStepFirstChange)
-        {
+        if (R.getDistance(T) / 1000 <= 40000000 && !timeStepFirstChange) {
             timestep = 250f;
-            System.out.println("Timestep=250");
-            timeStepFirstChange=true;
+            //System.out.println("Timestep=250");
+            timeStepFirstChange = true;
         }
-        if (R.getDistance(T)/1000 <= 20000000 && !timeStepSecndChange)
-        {
+        if (R.getDistance(T) / 1000 <= 20000000 && !timeStepSecndChange) {
             timestep = 100f;
-            System.out.println("Timestep=100");
-            timeStepSecndChange=true;
+            //System.out.println("Timestep=100");
+            timeStepSecndChange = true;
         }
-        if (R.getDistance(T)/1000 <= 10000000 && !timeStepThirdChange)
-        {
-            timestep=50f;
-            System.out.println("Timestep=50");
-            timeStepThirdChange=true;
+        if (R.getDistance(T) / 1000 <= 10000000 && !timeStepThirdChange) {
+            timestep = 50f;
+            //System.out.println("Timestep=50");
+            timeStepThirdChange = true;
         }
-        if(R.getDistance(T)/1000 <= 5000000 && !timeStepFourthChange)
-        {
-            timestep=10f;
-            System.out.println("Timestep=10");
-            timeStepFourthChange=true;
+        if (R.getDistance(T) / 1000 <= 5000000 && !timeStepFourthChange) {
+            timestep = 10f;
+            // System.out.println("Timestep=10");
+            timeStepFourthChange = true;
+            closeToTitan = true;
         }
-        if(R.getDistance(T)/1000 <= 2500000 && !timeStepFifthChange)
-        {
-            timestep=5f;
-            timeStepFifthChange=true;
-            System.out.println("Timestep=5");
+        if (R.getDistance(T) / 1000 <= 2500000 && !timeStepFifthChange) {
+            timestep = 5f;
+            timeStepFifthChange = true;
+            //System.out.println("Timestep=5");
         }
 
-        if(R.getDistance(T)/1000 <= 500000 && !timeStepSixthChange)
-        {
-            timestep=1f;
-            timeStepSixthChange=true;
-            System.out.println("Timestep=1");
+        if (R.getDistance(T) / 1000 <= 500000 && !timeStepSixthChange) {
+            timestep = 1f;
+            timeStepSixthChange = true;
+            //System.out.println("Timestep=1");
+            closeToTitan = true;
         }
-        if(R.getDistance(T)/1000 <= 100000 && !timeStepFinalChange)
-        {
-            timestep=0.5f;
-            timeStepFinalChange=true;
-            System.out.println("Timestep=0.5");
+        if (R.getDistance(T) / 1000 <= 100000 && !timeStepFinalChange) {
+            timestep = 0.5f;
+            timeStepFinalChange = true;
+            //System.out.println("Timestep=0.5");
+
         }
     }
-    */
 
     void updatePositions(){
+
+        if(!timeStepFinalChange && gang.launched) {
+            check();
+        }
+
+
+            //print the smallest distance between Titan and Rocket during journey
+        else if(test && gang.launched) {
+            Point T = new Point(planetaryObjects.get(17).x, planetaryObjects.get(17).y);
+            Point R = new Point(planetaryObjects.get(22).x, planetaryObjects.get(22).y);
+            double position = R.getDistance(T);
+            if (lastPosition < position && test && lastPosition != 0) {
+                test = false;
+            }
+            lastPosition = position;
+        }
+
+
         firstUpdate(planetaryObjects);
         secondUpdate(planetaryObjects);
         thirdUpdate(planetaryObjects);
@@ -300,16 +322,6 @@ public class SolarSystem extends CelestialBody{
         eightUpdate(planetaryObjects);
         ninethUpdate(planetaryObjects);
         move(planetaryObjects);
-
-
-		/* get the position of titan after a certain time t
-		----------------------------------------------------
-		countTimestep+=timestep;
-		if(countTimestep==TRAVEL_TIME)
-		{
-			System.out.println(planetaryObjects.get(17).name + "'s x position after 4years: "+ planetaryObjects.get(17).x);
-			System.out.println(planetaryObjects.get(17).name + "'s y position after 4years: "+planetaryObjects.get(17).y);
-		}*/
     }
 
 

@@ -30,8 +30,9 @@ public class gang extends Application{
     double diameter=3;
     ArrayList<Sphere> planets = new ArrayList<Sphere>();
     ArrayList<Label> names = new ArrayList<Label>();
-    boolean launched = false;
+    static boolean launched = false;
     int counter =0;
+    RocketLauncher launcher = new RocketLauncher();
 
     @Override
     public void start(Stage primaryStage) {
@@ -69,10 +70,8 @@ public class gang extends Application{
                         names.get(j).setTranslateX(offX - diameter / 2 + planetaryObjects.get(j).x * scale);
                         names.get(j).setTranslateY(offY - diameter / 2 + planetaryObjects.get(j).y * scale);
 
-                        if(j==22) {
-                            //System.out.println(counter++);
-                            //System.out.println("Earth x : " + planets.get(4).getTranslateX() + " y : " + planets.get(4).getTranslateY());
-                            System.out.println("Rocket x : "+planets.get(22).getTranslateX() + " y : " + planets.get(22).getTranslateY());
+                        if (planetaryObjects.get(j).name.equals("rocket")) {
+                            launcher.checkSpeed(planetaryObjects.get(j));
                         }
                     }
                 })
@@ -99,16 +98,19 @@ public class gang extends Application{
 
         primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
             switch (event.getCode()) {
-                case Q:
+                case W:
+                    s.timestep += 10;
+                    break;
+                case Q: //Zooming in
                     if (zoommax<1930){
                         camera.translateZProperty().set(camera.getTranslateZ() + 500);
                         zoommax=zoommax+500;}
                     break;
-                case A:
+                case A: //Zooming out
                     camera.translateZProperty().set(camera.getTranslateZ() - 500);
                     zoommax=zoommax-500;
                     break;
-                case T:
+                case T: // get's to titan
                     scale=10*Math.pow(10,-8);
                     camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(11).x*scale));
                     camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(11).y*scale));
@@ -116,38 +118,44 @@ public class gang extends Application{
                     camera.translateZProperty().set(500);
                     break;
 
-                case S:
+                case S: // get's to the sun
                     scale=10*Math.pow(10,-10);
                     camera.translateXProperty().set(0);
                     camera.translateYProperty().set(0);
                     scale=10*Math.pow(10,-10);
                     camera.translateZProperty().set(500);
                     break;
-                case E:
+                case E: //Get's to earth
                     scale=10*Math.pow(10,-8);
                     camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(4).x*scale));
                     camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(4).y*scale));
                     camera.translateZProperty().set(500);
                     break;
-                case L: //new
-                    System.out.println("Earth : "+planetaryObjects.get(4).x + " " +planetaryObjects.get(4).y);
+                case L: //Launch the rocket
                     if (!launched){
                         SolarSystem system = new SolarSystem();
                         for (int i = 0; i < counter+(int)(6144000/SolarSystem.timestep); i ++){
                             system.updatePositions();
                         }
-                        RocketLauncher launcher = new RocketLauncher();
-                        launcher.launch(s, system.getPlanetList().get(17));
+                        //RocketLauncher launcher = new RocketLauncher();
+                        launcher.launchToTitan(s, system.getPlanetList().get(17));
                         launched = true;
-                        planetaryObjects.add(RocketLauncher.rocket);
+                        s.planetaryObjects.add(RocketLauncher.rocket);
                         addRocket(RocketLauncher.rocket);
                         root.getChildren().add(planets.get(planets.size()-1));
                         root.getChildren().add(names.get(names.size()-1));
                     }
-                    System.out.println("Next Earth : "+planetaryObjects.get(4).x + " " +planetaryObjects.get(4).y);
-                    //System.out.println("Rocket object : " + planetaryObjects.get(planetaryObjects.size()-1));
-                    //System.out.println("rocket in planet : " + planets.size());
                     break;
+                case B:
+                    SolarSystem system = new SolarSystem();
+                    for (int i = 0; i < counter+(int)(6144000/SolarSystem.timestep); i ++){
+                        system.updatePositions();
+                    }
+                    launcher.launchToEarth(system.getPlanetList().get(4), s.getPlanetList().get(22));
+                    s.timestep = 500f;
+
+                    break;
+
             }
         });
 

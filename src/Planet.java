@@ -16,13 +16,10 @@ class Point{
     }
     //new
     public double getAngle(Point p) {
-        double xDiff = p.x - this.x;
-        double yDiff = p.y - this.y;
-        double degree = Math.toDegrees(Math.atan2(yDiff, xDiff));
+        double degree = Math.toDegrees(Math.atan2(p.y - this.y, p.x - this.x));
         if (degree < 0){
             degree += 360;
         }
-
         //return radians
         return Math.toRadians(degree);
     }
@@ -57,7 +54,8 @@ public class Planet extends CelestialBody {
     }
 
     public double getX() {
-        return this.x;}
+        return this.x;
+    }
 
     public double getY() {
         return this.y;
