@@ -1,5 +1,38 @@
 public abstract class CelestialBody implements Cloneable {
 
     String name;
-    double mass, x, y, velX, velY, afelio, accX, accY, oldAccX, oldAccY,oldX,oldY;
+    double mass, x, y, velX, velY, accX, accY, oldAccX, oldAccY,oldX,oldY, angle;
+
+    public void mainThruster(double ft){
+        // ft in kN
+        //System.out.println("thruster : "+this.angle);
+
+        double a = ft/this.mass;
+        double vel = a*SolarSystem.timestep;
+        double distance = vel*SolarSystem.timestep;
+        double dX = Math.cos(this.angle)*distance;
+        double dY = Math.sin(this.angle)*distance;
+
+        this.velX += dX;
+        this.velY += dY;
+    }
+    public void frontThruster(double ft){
+
+        double a = ft/this.mass;
+        double vel = a*SolarSystem.timestep;
+        double distance = vel*SolarSystem.timestep;
+        double dX = Math.cos(this.angle)*distance;
+        double dY = Math.sin(this.angle)*distance;
+
+        this.velX -= dX;
+        this.velY -= dY;
+    }
+
+    public void leftThruster(){
+        this.angle += 5*Math.PI/180;
+    }
+
+    public void rightThruster(){
+        this.angle += 5*Math.PI/180;
+    }
 }

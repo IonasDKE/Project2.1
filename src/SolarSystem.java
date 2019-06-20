@@ -34,7 +34,7 @@ public class SolarSystem extends CelestialBody{
     private static final double c1 = w1/2;
     private static final double c2 = (w0+w1)/2;
     public ArrayList<CelestialBody> planetaryObjects;
-    public static float timestep = 500f;
+    public static float timestep = 5000f;
     boolean timeStepFirstChange=false;
     boolean timeStepSecndChange=false;
     boolean timeStepThirdChange=false;
@@ -298,19 +298,6 @@ public class SolarSystem extends CelestialBody{
         if(!timeStepFinalChange && gang.launched) {
             check();
         }
-
-
-            //print the smallest distance between Titan and Rocket during journey
-        else if(test && gang.launched) {
-            Point T = new Point(planetaryObjects.get(17).x, planetaryObjects.get(17).y);
-            Point R = new Point(planetaryObjects.get(22).x, planetaryObjects.get(22).y);
-            double position = R.getDistance(T);
-            if (lastPosition < position && test && lastPosition != 0) {
-                test = false;
-            }
-            lastPosition = position;
-        }
-
 
         firstUpdate(planetaryObjects);
         secondUpdate(planetaryObjects);
