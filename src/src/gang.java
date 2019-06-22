@@ -16,18 +16,21 @@ import javafx.scene.Camera;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.input.MouseEvent;
 import java.util.ArrayList;
+import javafx.scene.shape.Circle;
 
 public class gang extends Application{
-	int offX=600, offY=600;
+	int offX=600, offY=-1900;
 	int oldOffX=600, oldOffY=600;
-	double scale=10*Math.pow(10,-5);
+	double scale=10*Math.pow(10,-4);
+	double landerScaleX=10*Math.pow(10,-1);
+	double landerScaleY=10*Math.pow(10,-4);
 	int fstClickX, fstClickY;
 	SolarSystem wholeSystem = new SolarSystem("wholeSystem");
 	SolarSystem landingSystem = new SolarSystem("landingSystem");
 	int zoommax=0;
-	double diameter=193;
+	double diameter=5148000*scale;
 	PIDController pidController = new PIDController(0.6, 175);
-
+	public static Group root = new Group();
 	int secondsPassed=0;
 
 	ArrayList<Sphere> planets = new ArrayList<Sphere>();
@@ -40,10 +43,10 @@ public class gang extends Application{
 		Polygon rocket = new Polygon();
 		double xModule = offX-diameter/2+landingSystem.planetaryObjects.get(1).getX()*scale;
 		double yModule = offY-diameter/2+landingSystem.planetaryObjects.get(1).getY()*scale;
-		double xModuleLeft = xModule+5;
-		double yModuleLeft = yModule-5;
-		double xModuleRight = xModule-5;
-		double yModuleRight = yModule-5;
+		double xModuleLeft = xModule+20;
+		double yModuleLeft = yModule-20;
+		double xModuleRight = xModule-20;
+		double yModuleRight = yModule-20;
 
 
 		rocket.getPoints().addAll(new Double[]{
@@ -52,12 +55,14 @@ public class gang extends Application{
 				xModuleLeft, yModuleLeft });
 		rocket.setFill(Color.RED);
 
+		
+
 		Timeline timeline = new Timeline(
 				new KeyFrame(Duration.millis(2), t -> {
 					//Put here the code which is supposed to be repeated(or check the x,y coordinates and decide when to thrust)
 					double distanceToSurface = Math.sqrt(rocketControler.getX()*rocketControler.getX() + rocketControler.getY()*rocketControler.getY());
 					System.out.println("x " + rocketControler.getX());
-					System.out.println("y " + rocketControler.getY());
+					//System.out.println("y " + rocketControler.getY());
 					if(rocketControler.getY()<1)
 					//if(distanceToSurface<=1)
 					{
@@ -80,27 +85,25 @@ public class gang extends Application{
 					controllerSystem(rocketControler, distanceToSurface, rocketControler.getX(), rocket, xModule, yModule);
 					secondsPassed++;
 
-					rocket.setTranslateX(landingSystem.planetaryObjects.get(1).getX()*scale+diameter/2);
-					rocket.setTranslateY(landingSystem.planetaryObjects.get(1).getY()*scale+diameter/2);
+					rocket.setTranslateX(landingSystem.planetaryObjects.get(1).getX()*landerScaleX+diameter/2);
+					rocket.setTranslateY(landingSystem.planetaryObjects.get(1).getY()*landerScaleY+diameter/2);
+
+					printTrajectory(rocket.getTranslateX()-diameter/2+600,rocket.getTranslateY()-diameter/2+100);
 
 					for(int j=0;j<planets.size();j++)
 					{
 						planets.get(j).setTranslateX(offX+landingSystem.planetaryObjects.get(j).getX()*scale);
-						planets.get(j).setTranslateY(offY+landingSystem.planetaryObjects.get(j).getY()*scale);
+						planets.get(j).setTranslateY(offY+landingSystem.planetaryObjects.get(j).getY()*scale-3315);
 					}
 				})
 		);
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
 
-		Group root = new Group();
+		
 		root.getChildren().addAll(planets);
 		root.getChildren().add(rocket);
-
-		Line line = new Line(offX-0, offY+1001, offX-0, offY-1001);
-		line.setStroke(Color.RED);
-
-		root.getChildren().add(line);
+		
 
 		Scene scene = new Scene(root, 1200, 1200);
 		scene.setFill(Color.BLACK);
@@ -109,9 +112,10 @@ public class gang extends Application{
 
 		scene.setCamera(camera);
 
-		camera.translateZProperty().set(-500);
+		camera.translateZProperty().set(-4000);
+		camera.translateYProperty().set(1000);
 		//camera.setNearClip(1);
-		camera.setFarClip(5000);
+		camera.setFarClip(500000);
 
 		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 			switch (event.getCode()) {
@@ -186,8 +190,8 @@ public class gang extends Application{
 				if (p.getName().equals("centerTitan")) {
 
 					PhongMaterial material = new PhongMaterial();
-					material.setDiffuseMap(new Image("/titan.jpg"));
-					planet.setMaterial(material);
+					//material.setDiffuseMap(new Image("/titan.jpg"));
+					//planet.setMaterial(material);
 				}
 
 				planets.add(planet);
@@ -232,6 +236,16 @@ public class gang extends Application{
 		{
 			leftThrust(rocketGUI, rocket, xModule, yModule);
 		}
+	}
+
+	public void printTrajectory(double x, double y){
+		Circle trajectoryDot = new Circle();
+		trajectoryDot.setCenterX(x);
+		trajectoryDot.setCenterY(y);
+		trajectoryDot.setRadius(2);
+		trajectoryDot.setFill(javafx.scene.paint.Color.RED);
+		root.getChildren().add(trajectoryDot);
+		System.out.println("circle:  "+x+"  "+y);
 	}
 
 	public void wind(LandingModule rocket, double D)

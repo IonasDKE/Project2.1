@@ -67,7 +67,7 @@ public class SolarSystem {
 		Planet Mercury = new Planet("Mercury", 3.3011*Math.pow(10,23),-58432374622.839942932,-21437816633.49621582, 6693.4979641187965171, -43627.083379485586192);
 		Planet Venus = new Planet("Venus",4.8675*Math.pow(10,24),-2580458154.9969267845,-108701123911.93000793, 34777.284216476567963, -961.21239989254672764);
 
-		LandingModule Lander = new LandingModule("Lander", 15000, 1000, 2000000, 0, 0);
+		LandingModule Lander = new LandingModule("Lander", 15000, 500, 2000000, 0, 0);
 		Planet centerTitan = new Planet("centerTitan",1.3452*Math.pow(10,23),0,0,0,0);
 
 
