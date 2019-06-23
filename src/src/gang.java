@@ -31,7 +31,8 @@ public class gang extends Application{
 	double diameter=5148000*scale;
 	PIDController pidController = new PIDController(0.6, 175);
 	public static Group root = new Group();
-	int secondsPassed=0;
+	int iterationsPassed=0;
+	boolean colorChangeForLanderTrajectory=false;
 
 	ArrayList<Sphere> planets = new ArrayList<Sphere>();
 
@@ -63,15 +64,19 @@ public class gang extends Application{
 					double distanceToSurface = Math.sqrt(rocketControler.getX()*rocketControler.getX() + rocketControler.getY()*rocketControler.getY());
 					System.out.println("x " + rocketControler.getX());
 					//System.out.println("y " + rocketControler.getY());
-					if(rocketControler.getY()<1)
+					/*if(rocketControler.getY()<1)
 					//if(distanceToSurface<=1)
 					{
 						try
 						{
 							System.out.println("d = " + distanceToSurface);
-							System.out.println("Second passed " + secondsPassed);
-							System.out.println("Vel x" + rocketControler.getVelX());
-							System.out.println("Vel y" + rocketControler.getVelY());
+							System.out.println("Iterations " + iterationsPassed);
+							System.out.println("Seconds passed " + iterationsPassed*landingSystem.timestep);
+							System.out.println("x " + rocketControler.getX());
+							System.out.println("y " + rocketControler.getY());
+							System.out.println("Vel x " + rocketControler.getVelX());
+							System.out.println("Vel y " + rocketControler.getVelY());
+							System.out.println("Angle " + rocketControler.getAngle());
 							Thread.sleep(20000);
 						}
 						catch(InterruptedException ex)
@@ -79,16 +84,31 @@ public class gang extends Application{
 							Thread.currentThread().interrupt();
 						}
 					}
+					*/
 
-					landingSystem.updatePositions();
 
-					controllerSystem(rocketControler, distanceToSurface, rocketControler.getX(), rocket, xModule, yModule);
-					secondsPassed++;
+					if(iterationsPassed<38456) {
+						landingSystem.updatePositions();
+
+						controllerDescSystem(rocketControler, distanceToSurface, rocketControler.getX(), rocket, xModule, yModule);
+						if(iterationsPassed==38455)
+						{
+							colorChangeForLanderTrajectory=true;
+						}
+					}
+					if(iterationsPassed>40000)
+					{
+						landingSystem.updatePositions();
+
+						controllerAscSystem(rocketControler, distanceToSurface, rocketControler.getX(), rocket, xModule, yModule);
+					}
+
+					iterationsPassed++;
 
 					rocket.setTranslateX(landingSystem.planetaryObjects.get(1).getX()*landerScaleX+diameter/2);
 					rocket.setTranslateY(landingSystem.planetaryObjects.get(1).getY()*landerScaleY+diameter/2);
 
-					printTrajectory(rocket.getTranslateX()-diameter/2+600,rocket.getTranslateY()-diameter/2+100);
+					printTrajectory(rocket.getTranslateX()-diameter/2+600,rocket.getTranslateY()-diameter/2+100, colorChangeForLanderTrajectory);
 
 					for(int j=0;j<planets.size();j++)
 					{
@@ -204,13 +224,33 @@ public class gang extends Application{
 
 	}
 
-	public void controllerSystem(LandingModule rocket, double distanceToSurface, double currentXvalue, Polygon rocketGUI, double xModule, double yModule)
+	public void controllerAscSystem(LandingModule rocket, double distanceToSurface, double currentXvalue, Polygon rocketGUI, double xModule, double yModule)
 	{
-		yControl(rocket, distanceToSurface);
+		yAscControl(rocket, distanceToSurface);
 		xControl(rocket, currentXvalue, rocketGUI, xModule, yModule);
 	}
 
-	public void yControl(LandingModule rocket, double distanceToSurface)
+	public void controllerDescSystem(LandingModule rocket, double distanceToSurface, double currentXvalue, Polygon rocketGUI, double xModule, double yModule)
+	{
+		yDescControl(rocket, distanceToSurface);
+		xControl(rocket, currentXvalue, rocketGUI, xModule, yModule);
+	}
+
+	public void yAscControl(LandingModule rocket, double distanceToSurface)
+	{
+		double thrustPower = -(2350*rocket.getVelY()) - (4*(rocket.getY()-2000000));
+		if(distanceToSurface<30)
+		{
+			thrustPower+=12500;
+			if(distanceToSurface<22)
+			{
+				thrustPower+=18000;
+			}
+		}
+		rocket.mainThrust(thrustPower);
+	}
+
+	public void yDescControl(LandingModule rocket, double distanceToSurface)
 	{
 		double thrustPower = -(2350*rocket.getVelY()) - (4*rocket.getY());
 		if(distanceToSurface<30)
@@ -223,6 +263,7 @@ public class gang extends Application{
 		}
 		rocket.mainThrust(thrustPower);
 	}
+
 
 	public void xControl(LandingModule rocket, double currentXvalue, Polygon rocketGUI, double xModule, double yModule)
 	{
@@ -238,14 +279,17 @@ public class gang extends Application{
 		}
 	}
 
-	public void printTrajectory(double x, double y){
+	public void printTrajectory(double x, double y, boolean colorChanger){
 		Circle trajectoryDot = new Circle();
 		trajectoryDot.setCenterX(x);
 		trajectoryDot.setCenterY(y);
 		trajectoryDot.setRadius(2);
-		trajectoryDot.setFill(javafx.scene.paint.Color.RED);
+		if(colorChanger==false) {
+			trajectoryDot.setFill(javafx.scene.paint.Color.RED);
+		} else {
+			trajectoryDot.setFill(javafx.scene.paint.Color.BLUE);
+		}
 		root.getChildren().add(trajectoryDot);
-		System.out.println("circle:  "+x+"  "+y);
 	}
 
 	public void wind(LandingModule rocket, double D)

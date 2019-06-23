@@ -48,6 +48,6 @@ public class LandingModule extends Planet{
 
     public double getAngle()
     {
-        return angle;
+        return this.angle;
     }
 }

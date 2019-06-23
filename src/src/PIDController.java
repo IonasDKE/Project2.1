@@ -11,8 +11,10 @@ public class PIDController {
     }
     public double executePID(double currentXValue)
     {
+        double outputValue=0;
         error = finalXValue - currentXValue;
-        double outputValue = kp*error + kd * ((error - previousError)/0.5);
+        //where 0.1 is the timestep
+        outputValue = kp * error + kd * ((error - previousError) / 0.1);
         previousError = error;
         return outputValue;
     }
