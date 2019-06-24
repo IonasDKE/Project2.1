@@ -53,13 +53,11 @@ public class RocketLauncher {
         double distance = rocketPosition.getDistance(destination);
 
         if (distance < (startingDistance/2) && speedReached && !catchSpeedSet){
-            System.out.println("Time : "+ counter*5000 + " & distance : " + distance);
-            catchSpeed = distance/(time-counter*SolarSystem.timestep);
+            catchSpeed = distance /((time/SolarSystem.timestep)-counter);
+            System.out.println(catchSpeed);
             catchSpeedSet = true;
-            System.out.println("speed to catch : " + catchSpeed +" rocket speed : " + (Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY)));
         }
         if((Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) < catchSpeed) && catchSpeedSet){
-            System.out.println("catch speed");
             rocket.mainThruster(500);
         }
 
