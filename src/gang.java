@@ -21,7 +21,6 @@ import javafx.scene.control.Label;
 
 public class gang extends Application{
     int offX=600, offY=600;
-    int oldOffX=600, oldOffY=600;
     double scale=10*Math.pow(10,-10);
     int fstClickX, fstClickY;
     SolarSystem s = new SolarSystem();
@@ -66,6 +65,7 @@ public class gang extends Application{
 
                     s.updatePositions();
                     system.updatePositions();
+                    wayBack.updatePositions();
                     for(int j=0;j<planets.size();j++) {
                         counter++;
                         planets.get(j).setTranslateX(offX - diameter / 2 + planetaryObjects.get(j).x * scale);
@@ -104,6 +104,7 @@ public class gang extends Application{
             switch (event.getCode()) {
                 case W:
                     s.timestep += 10;
+                    System.out.println("time step increase by 10");
                     break;
                 case Q: //Zooming in
                     if (zoommax<1930){
@@ -149,9 +150,9 @@ public class gang extends Application{
                     }
                     break;
                 case B:
-                    s.timestep = 500f;
-                    system.timestep = 500f;
-                    for (int i = 0; i < (int)(6144000/SolarSystem.timestep); i ++){
+                    //s.timestep = 500f;
+                    //system.timestep = 500f;
+                    for (int i = 0; i < (int)(189216000/SolarSystem.timestep); i ++){
                         wayBack.updatePositions();
                     }
                     launcher.launchToEarth(wayBack.getPlanetList().get(4));

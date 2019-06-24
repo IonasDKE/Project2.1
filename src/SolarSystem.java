@@ -1,23 +1,5 @@
-import java.awt.Graphics;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
-import javafx.animation.Interpolator;
-import javafx.animation.PathTransition;
-import javafx.animation.Timeline;
-import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
-import javafx.scene.shape.Ellipse;
-import javafx.scene.shape.Sphere;
-import javafx.stage.Stage;
-import javafx.util.Duration;
 /*
 - Modelling the planetary system using the 4th order Yoshida integrator (an upgraded version of the leapfrog method).
 - The scale: distance = m, mass = kg, time = s, velocity = m/s, acceleration = m/s^2
@@ -151,8 +133,9 @@ public class SolarSystem extends CelestialBody{
     {
         for(int i=0; i<planetaryObjects.size();i++)
         {
-            listOfObritalObjects.get(i).velX+= w1*listOfObritalObjects.get(i).accX*timestep;
-            listOfObritalObjects.get(i).velY+= w1*listOfObritalObjects.get(i).accY*timestep;
+            if (!listOfObritalObjects.get(i).name.equals("rocket")){
+                listOfObritalObjects.get(i).velX+= w1*listOfObritalObjects.get(i).accX*timestep;
+                listOfObritalObjects.get(i).velY+= w1*listOfObritalObjects.get(i).accY*timestep;}
         }
     }
 
@@ -194,8 +177,9 @@ public class SolarSystem extends CelestialBody{
         // v_i_2 = v_i_1+ w0*a*timestep
         for(int i=0; i<listOfObritalObjects.size();i++)
         {
-            listOfObritalObjects.get(i).velX+= w0*listOfObritalObjects.get(i).accX*timestep;
-            listOfObritalObjects.get(i).velY+= w0*listOfObritalObjects.get(i).accY*timestep;
+            if (!listOfObritalObjects.get(i).name.equals("rocket")) {
+                listOfObritalObjects.get(i).velX+= w0*listOfObritalObjects.get(i).accX*timestep;
+                listOfObritalObjects.get(i).velY+= w0*listOfObritalObjects.get(i).accY*timestep;}
         }
     }
 
@@ -217,14 +201,15 @@ public class SolarSystem extends CelestialBody{
             listOfObritalObjects.get(i).accY = 0;
 
             for (int j = 0; j < listOfObritalObjects.size(); j++) {
-                if (i != j) {
-                    dx = listOfObritalObjects.get(j).oldX - listOfObritalObjects.get(i).oldX;
-                    dy = listOfObritalObjects.get(j).oldY - listOfObritalObjects.get(i).oldY;
-                    D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-                    A = G * listOfObritalObjects.get(j).mass / Math.pow(D, 2);
-                    listOfObritalObjects.get(i).accX += dx * A / D;
-                    listOfObritalObjects.get(i).accY += dy * A / D;
-                }
+                if (!listOfObritalObjects.get(i).name.equals("rocket")){
+                    if (i != j) {
+                        dx = listOfObritalObjects.get(j).oldX - listOfObritalObjects.get(i).oldX;
+                        dy = listOfObritalObjects.get(j).oldY - listOfObritalObjects.get(i).oldY;
+                        D = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+                        A = G * listOfObritalObjects.get(j).mass / Math.pow(D, 2);
+                        listOfObritalObjects.get(i).accX += dx * A / D;
+                        listOfObritalObjects.get(i).accY += dy * A / D;
+                    }}
             }
 
         }
@@ -234,16 +219,26 @@ public class SolarSystem extends CelestialBody{
         // v_i_3 = v_i_2 + w1*a*timestep
         for(int i=0; i<listOfObritalObjects.size();i++)
         {
-            listOfObritalObjects.get(i).velX+= w1*listOfObritalObjects.get(i).accX*timestep;
-            listOfObritalObjects.get(i).velY+= w1*listOfObritalObjects.get(i).accY*timestep;
+            if (!listOfObritalObjects.get(i).name.equals("rocket")) {
+                listOfObritalObjects.get(i).velX+= w1*listOfObritalObjects.get(i).accX*timestep;
+                listOfObritalObjects.get(i).velY+= w1*listOfObritalObjects.get(i).accY*timestep;}
         }
     }
 
     void move(ArrayList<CelestialBody> listOfObritalObjects) {
         // x_(i+1) = x_i_3 + c1*v_i_3*timestep;
         for (int i=0;i<listOfObritalObjects.size();i++) {
-            listOfObritalObjects.get(i).x = listOfObritalObjects.get(i).oldX+ timestep * c1*listOfObritalObjects.get(i).velX;
-            listOfObritalObjects.get(i).y = listOfObritalObjects.get(i).oldY+ timestep * c1*listOfObritalObjects.get(i).velY;
+            if (!listOfObritalObjects.get(i).name.equals("rocket")) {
+                listOfObritalObjects.get(i).x = listOfObritalObjects.get(i).oldX+ timestep * c1*listOfObritalObjects.get(i).velX;
+                listOfObritalObjects.get(i).y = listOfObritalObjects.get(i).oldY+ timestep * c1*listOfObritalObjects.get(i).velY;}
+
+            else {
+                listOfObritalObjects.get(i).x+= timestep*listOfObritalObjects.get(i).velX;
+                listOfObritalObjects.get(i).y+= timestep*listOfObritalObjects.get(i).velY;
+                //System.out.println("vel X: "+ listOfObritalObjects.get(i).velX);
+                //System.out.println("vel Y:" + listOfObritalObjects.get(i).velY);
+
+            }
 
         }
     }
@@ -293,11 +288,13 @@ public class SolarSystem extends CelestialBody{
         }
     }
 
-    void updatePositions(){
 
+    void updatePositions(){
+        //System.out.println("Still running");
+        /*
         if(!timeStepFinalChange && gang.launched) {
             check();
-        }
+        } */
 
         firstUpdate(planetaryObjects);
         secondUpdate(planetaryObjects);

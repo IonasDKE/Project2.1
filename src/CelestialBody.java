@@ -9,9 +9,8 @@ public abstract class CelestialBody implements Cloneable {
 
         double a = ft/this.mass;
         double vel = a*SolarSystem.timestep;
-        double distance = vel*SolarSystem.timestep;
-        double dX = Math.cos(this.angle)*distance;
-        double dY = Math.sin(this.angle)*distance;
+        double dX = Math.cos(this.angle)*vel;
+        double dY = Math.sin(this.angle)*vel;
 
         this.velX += dX;
         this.velY += dY;
@@ -20,9 +19,8 @@ public abstract class CelestialBody implements Cloneable {
 
         double a = ft/this.mass;
         double vel = a*SolarSystem.timestep;
-        double distance = vel*SolarSystem.timestep;
-        double dX = Math.cos(this.angle)*distance;
-        double dY = Math.sin(this.angle)*distance;
+        double dX = Math.cos(this.angle)*vel;
+        double dY = Math.sin(this.angle)*vel;
 
         this.velX -= dX;
         this.velY -= dY;
