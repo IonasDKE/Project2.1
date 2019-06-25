@@ -62,20 +62,16 @@ public class RocketLauncher {
         }
 
         if (distance <= startingDistance/4 && !rotate){
-            System.out.println("rotate");
+            System.out.println("rotated");
             brakeDistance = getDistance();
-            System.out.println("braking distance: "+ brakeDistance);
+            System.out.println("braking distance: " + brakeDistance);
             rotate = true;
-            rocket.rotateRocket();
-        }
-
-        if(rotate){
-            System.out.println("distance: "+ distance);
+            rocket.setAngle();
         }
 
         if(rotate && distance <= brakeDistance){
             System.out.println("rocket speed: "+Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY));
-            if(Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY) > 947) {
+            if(Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY) < 947) {
                 System.out.println("brake");
                 rocket.frontThruster(445);
             }

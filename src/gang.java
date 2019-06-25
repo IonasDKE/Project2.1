@@ -157,9 +157,8 @@ public class gang extends Application{
                     while(RocketLauncher.rocket.angle > 45|| RocketLauncher.rocket.angle < 0){
                         for (int j = 0; j < 10; j ++)
                             wayBack.updatePositions();
-
+                        launcher.launchToEarth(wayBack.getPlanetList().get(4));
                     }
-
                     launcher.launchToEarth(wayBack.getPlanetList().get(4));
                     break;
             }
