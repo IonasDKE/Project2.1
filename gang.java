@@ -53,7 +53,7 @@ public class gang extends Application{
         rocket.setFill(Color.RED);
 
         rocket.setTranslateY(10);
-*/		
+*/
 
         Group root = new Group();
 		root.getChildren().addAll(planets);
@@ -72,35 +72,35 @@ public class gang extends Application{
      	//camera.setNearClip(1);
      	camera.setFarClip(5000);
 
-     	
+
 		Timeline timeline = new Timeline(
 				new KeyFrame(Duration.millis(20), t -> {
 					//Put here the code which is supposed to be repeated(or check the x,y coordinates and decide when to thrust)
+					s.updatePositions();
 					for(int j=0;j<planets.size();j++)
 					{
-						s.updatePositions();
 						planets.get(j).setTranslateX(offX-diameter/2+planetaryObjects.get(j).x*scale);
 						planets.get(j).setTranslateY(offY-diameter/2+planetaryObjects.get(j).y*scale);
 						names.get(j).setTranslateX(offX-diameter/2+planetaryObjects.get(j).x*scale);
 						names.get(j).setTranslateY(offY-diameter/2+planetaryObjects.get(j).y*scale);
 					}
 
-					if (s.closeToTitan && secondCheck){
+					if (s.getCloseToTitan() && secondCheck){
 						scale=10*Math.pow(10,-8);
                 		camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(11).x*scale));
                 		camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(11).y*scale));
 						camera.translateZProperty().set(500);
-						s.closeToTitan=false;
+						s.setCloseToTitan(false);
 						secondCheck= false;
 					}
 
-					if (s.closeToTitan){
+					if (s.getCloseToTitan()){
 						scale=10*Math.pow(10,-6);
                 		camera.translateXProperty().set((int)(diameter/2+planetaryObjects.get(17).x*scale));
                 		camera.translateYProperty().set((int)(diameter/2+planetaryObjects.get(17).y*scale));
                 		planets.get(17).setRadius(2574*10*Math.pow(10,-2));
 						camera.translateZProperty().set(500);
-						s.closeToTitan=false;
+						s.setCloseToTitan(false);
 						titanCamera=true;
 					}
 
@@ -113,7 +113,7 @@ public class gang extends Application{
 		timeline.setCycleCount(Animation.INDEFINITE);
 		timeline.play();
 
-		
+
 
 		primaryStage.addEventHandler(KeyEvent.KEY_PRESSED, event -> {
 			switch (event.getCode()) {
