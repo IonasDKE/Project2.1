@@ -1,8 +1,8 @@
 public class RocketLauncher {
-    int time = 6144000;   // 5years 157784630
+    static int time = 126227808;   // 5years 157784630
     CelestialBody earth;
     static CelestialBody rocket = new Rocket("rocket",5712, 0, 0, 0, 0, 0);
-    protected double speed, startingDistance, catchSpeed, counter;
+    protected double speed, startingDistance, newSpeed, counter;
     private Point destination;
 
     public void launchToTitan(SolarSystem system, CelestialBody titan){
@@ -12,12 +12,10 @@ public class RocketLauncher {
         double distanceDifference = -6371000.0; // distance from the center of earth and his surface
         rocket.x = earth.x + distanceDifference;
         rocket.y = earth.y;
-
         setSpeedAndAngle(titan);
     }
 
     public void launchToEarth(CelestialBody destination){
-
         setSpeedAndAngle(destination);
     }
 
@@ -31,17 +29,20 @@ public class RocketLauncher {
 
         startingDistance = rocketPosition.getDistance(destination);
         speed = startingDistance/time;
-        System.out.println(speed);
+        System.out.println("Starting speed: "+speed);
     }
 
     private boolean speedReached = false; //is set to true once we reach our travel speed
     private boolean speedChanged = false; //is set to true once we change our speed to get into orbit
-    private boolean catchSpeedSet = false;
+    private boolean rotate = false;
 
     public void checkSpeedAndAngle(){
         counter++;
+        Point rocketPosition = new Point(rocket.x, rocket.y);
+        double distance = rocketPosition.getDistance(destination);
+
         if(Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) < speed && !speedReached){
-            rocket.mainThruster(445);
+            rocket.mainThruster(rocket.reduceSpeedPower(distance));
 
             if (Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY) >= speed){
                 System.out.println("travel speed reached");
@@ -49,30 +50,31 @@ public class RocketLauncher {
             }
         }
 
-        Point rocketPosition = new Point(rocket.x, rocket.y);
-        double distance = rocketPosition.getDistance(destination);
-
-        if (distance < (startingDistance/2) && speedReached && !catchSpeedSet){
-            catchSpeed = distance /((time/SolarSystem.timestep)-counter);
-            System.out.println(catchSpeed);
-            catchSpeedSet = true;
+        if (speedReached && !speedChanged){
+            newSpeed = startingDistance /(((time/SolarSystem.timestep)-counter)*SolarSystem.timestep);
+            speedChanged = true;
+            System.out.println("new speed: "+newSpeed);
         }
-        if((Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) < catchSpeed) && catchSpeedSet){
-            rocket.mainThruster(500);
+        if((Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) < newSpeed) && speedChanged){
+            rocket.mainThruster(rocket.reduceSpeedPower(distance));
         }
 
-        if (distance <= 42000){
-            if (!speedChanged){
-                System.out.println("speed = 947");
-                speed = 947;
-                speedChanged = true;
-            }
-            if(Math.sqrt(rocket.velX * rocket.velX + rocket.velY *rocket.velY) > speed){
-                System.out.println("Front thrust");
-                rocket.frontThruster(200);
+        if (distance <= startingDistance/10 && !rotate){
+            System.out.println("rotate");
+            rotate = true;
+            rocket.rotateRocket();
+        }
+
+        if(rotate){
+            rocket.reduceSpeedPower(distance);
+            if(rocket.velX + rocket.velY > 947) {
+                System.out.println("speed: " + Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY));
+                rocket.mainThruster(rocket.reduceSpeedPower(distance));
+                //System.out.println("Slow down");
             }
         }
     }
+
     public void setDestination(Point destination){
         this.destination = destination;
     }

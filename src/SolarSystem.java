@@ -124,9 +124,7 @@ public class SolarSystem extends CelestialBody{
                     listOfObritalObjects.get(i).accY += dy * A / D;
                 }
             }
-
         }
-
     }
     void thirdUpdate(ArrayList<CelestialBody> listOfObritalObjects)
     // v_i_1 = v_i+ w1*a*timestep
