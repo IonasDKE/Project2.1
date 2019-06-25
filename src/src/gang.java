@@ -62,7 +62,7 @@ public class gang extends Application{
 				new KeyFrame(Duration.millis(2), t -> {
 					//Put here the code which is supposed to be repeated(or check the x,y coordinates and decide when to thrust)
 					double distanceToSurface = Math.sqrt(rocketControler.getX()*rocketControler.getX() + rocketControler.getY()*rocketControler.getY());
-					System.out.println("x " + rocketControler.getX());
+					//System.out.println("x " + rocketControler.getX());
 					//System.out.println("y " + rocketControler.getY());
 					/*if(rocketControler.getY()<1)
 					//if(distanceToSurface<=1)
@@ -93,6 +93,7 @@ public class gang extends Application{
 						controllerDescSystem(rocketControler, distanceToSurface, rocketControler.getX(), rocket, xModule, yModule);
 						if(iterationsPassed==38455)
 						{
+							System.out.println(rocketControler.getBurnedFuel());
 							colorChangeForLanderTrajectory=true;
 						}
 					}
@@ -100,7 +101,13 @@ public class gang extends Application{
 					{
 						landingSystem.updatePositions();
 
+						pidController.setFinalXValue(500);
 						controllerAscSystem(rocketControler, distanceToSurface, rocketControler.getX(), rocket, xModule, yModule);
+					}
+					if(iterationsPassed==80000)
+					{
+						System.out.println(rocketControler.getBurnedFuel());
+						colorChangeForLanderTrajectory=false;
 					}
 
 					iterationsPassed++;

@@ -36,7 +36,7 @@ public class LandingModule extends Planet{
         {
             ft=44000;
         }
-        burnedFuel += (Math.abs(ft)/3000)*0.5;
+        burnedFuel += (Math.abs(ft)/3000)*0.1;
         double a = ft/super.getMass();
         double vel=a*SolarSystem.timestep;
         double distance = vel*SolarSystem.timestep;
@@ -49,5 +49,9 @@ public class LandingModule extends Planet{
     public double getAngle()
     {
         return this.angle;
+    }
+    public double getBurnedFuel()
+    {
+        return this.burnedFuel;
     }
 }

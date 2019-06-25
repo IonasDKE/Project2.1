@@ -18,4 +18,8 @@ public class PIDController {
         previousError = error;
         return outputValue;
     }
+    public void setFinalXValue(double newFinalXValue)
+    {
+        this.finalXValue=newFinalXValue;
+    }
 }
