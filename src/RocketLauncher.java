@@ -1,8 +1,8 @@
 public class RocketLauncher {
-    static int time = 126227808;   // 5years 157784630
+    static int time = 6144000;   // 5years 157784630
     CelestialBody earth;
     static CelestialBody rocket = new Rocket("rocket",5712, 0, 0, 0, 0, 0);
-    protected double speed, startingDistance, newSpeed, counter;
+    protected double speed, startingDistance, newSpeed, counter, brakeDistance;
     private Point destination;
 
     public void launchToTitan(SolarSystem system, CelestialBody titan){
@@ -38,11 +38,12 @@ public class RocketLauncher {
 
     public void checkSpeedAndAngle(){
         counter++;
+
         Point rocketPosition = new Point(rocket.x, rocket.y);
         double distance = rocketPosition.getDistance(destination);
 
         if(Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) < speed && !speedReached){
-            rocket.mainThruster(rocket.reduceSpeedPower(distance));
+            rocket.mainThruster(445);
 
             if (Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY) >= speed){
                 System.out.println("travel speed reached");
@@ -55,24 +56,38 @@ public class RocketLauncher {
             speedChanged = true;
             System.out.println("new speed: "+newSpeed);
         }
+
         if((Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) < newSpeed) && speedChanged){
-            rocket.mainThruster(rocket.reduceSpeedPower(distance));
+            rocket.mainThruster(445);
         }
 
-        if (distance <= startingDistance/10 && !rotate){
+        if (distance <= startingDistance/4 && !rotate){
             System.out.println("rotate");
+            brakeDistance = getDistance();
+            System.out.println("braking distance: "+ brakeDistance);
             rotate = true;
             rocket.rotateRocket();
         }
 
         if(rotate){
-            rocket.reduceSpeedPower(distance);
-            if(rocket.velX + rocket.velY > 947) {
-                System.out.println("speed: " + Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY));
-                rocket.mainThruster(rocket.reduceSpeedPower(distance));
-                //System.out.println("Slow down");
+            System.out.println("distance: "+ distance);
+        }
+
+        if(rotate && distance <= brakeDistance){
+            System.out.println("rocket speed: "+Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY));
+            if(Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY) > 947) {
+                System.out.println("brake");
+                rocket.frontThruster(445);
             }
         }
+    }
+
+    public double getDistance(){
+        double a = (445/rocket.mass);
+        double t = (Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY) - 947)/a;
+        double distance = Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY) + (a * Math.pow(t, 2))/2;
+
+        return distance;
     }
 
     public void setDestination(Point destination){

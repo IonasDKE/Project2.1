@@ -150,11 +150,16 @@ public class gang extends Application{
                     }
                     break;
                 case B:
-                    //s.timestep = 500f;
-                    //system.timestep = 500f;
+
                     for (int i = 0; i < (int)(RocketLauncher.time/SolarSystem.timestep); i ++){
                         wayBack.updatePositions();
                     }
+                    while(RocketLauncher.rocket.angle > 45|| RocketLauncher.rocket.angle < 0){
+                        for (int j = 0; j < 10; j ++)
+                            wayBack.updatePositions();
+
+                    }
+
                     launcher.launchToEarth(wayBack.getPlanetList().get(4));
                     break;
             }

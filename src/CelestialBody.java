@@ -1,3 +1,5 @@
+import java.sql.SQLOutput;
+
 public abstract class CelestialBody implements Cloneable {
 
     String name;
@@ -7,11 +9,6 @@ public abstract class CelestialBody implements Cloneable {
     public void mainThruster(double ft) {
         // ft in kN
 
-        if(ft < -445){
-            ft = -445;
-        }else if (ft > 445){
-            ft = 445;
-        }
         double a = ft / this.mass;
         double vel = a * SolarSystem.timestep;
 
@@ -21,11 +18,22 @@ public abstract class CelestialBody implements Cloneable {
         this.velY += dY;
 
     }
-    public void rotateRocket(){
-        rotated = true;
+    public void frontThruster(double ft){
+
+        double a = ft / this.mass;
+        double vel = a * SolarSystem.timestep;
+
+        double dX = Math.cos(this.angle+Math.PI) * vel;
+        double dY = Math.sin(this.angle+Math.PI) * vel;
+
+        System.out.println("Velx: "+dX);
+        System.out.println("Vely: "+dY);
+
+        this.velX += dX;
+        this.velY += dY;
     }
 
-    public double  reduceSpeedPower(double distance){
-        return  -(this.velX+this.velY) - distance;
+    public void rotateRocket(){
+        rotated = true;
     }
 }

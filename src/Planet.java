@@ -16,12 +16,7 @@ class Point{
     }
     //new
     public double getAngle(Point p) {
-        double degree = Math.toDegrees(Math.atan2(p.y - this.y, p.x - this.x));
-        if (degree < 0){
-            degree += 360;
-        }
-        //return radians
-        return Math.toRadians(degree);
+        return (Math.atan2(p.y - this.y, p.x - this.x));
     }
 }
 
