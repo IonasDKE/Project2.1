@@ -1,6 +1,7 @@
 public class Rocket extends  CelestialBody{
+    // fuel in kg
 
-    public Rocket(String name, double mass, double x, double y, double velX, double velY, double angle) {
+    public Rocket(String name, double mass, double x, double y, double velX, double velY, double angle, double fuel) {
         this.name = name;
         this.mass = mass;
         this.x = x;
@@ -14,5 +15,6 @@ public class Rocket extends  CelestialBody{
         this.oldX = 0;
         this.oldY=0;
         this.angle = angle;
+        this.fuel = fuel;
     }
 }

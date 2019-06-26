@@ -18,6 +18,7 @@ import javafx.scene.input.MouseEvent;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import javafx.scene.control.Label;
+import sun.misc.Launcher;
 
 public class gang extends Application{
     int offX=600, offY=600;
@@ -150,17 +151,21 @@ public class gang extends Application{
                     }
                     break;
                 case B:
-
+                    launcher.reset();
                     for (int i = 0; i < (int)(RocketLauncher.time/SolarSystem.timestep); i ++){
                         wayBack.updatePositions();
                     }
-                    while(RocketLauncher.rocket.angle > 45|| RocketLauncher.rocket.angle < 0){
+                    /*
+                    while(RocketLauncher.rocket.angle > 30|| RocketLauncher.rocket.angle < 0){
                         for (int j = 0; j < 10; j ++)
                             wayBack.updatePositions();
                         launcher.launchToEarth(wayBack.getPlanetList().get(4));
                     }
+                    */
                     launcher.launchToEarth(wayBack.getPlanetList().get(4));
                     break;
+                case F:
+                    System.out.println("fuel: " + RocketLauncher.rocket.fuel);
             }
         });
 

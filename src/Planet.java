@@ -7,14 +7,14 @@ class Point{
         this.x = x;
         this.y = y;
     }
-    //New
+
     public double getDistance (Point T){
         double deltaX=Math.abs(this.x-T.x);
         double deltaY=Math.abs(this.y-T.y);
         return Math.sqrt(Math.pow(deltaX,2)+Math.pow(deltaY,2));
 
     }
-    //new
+
     public double getAngle(Point p) {
         return (Math.atan2(p.y - this.y, p.x - this.x));
     }
