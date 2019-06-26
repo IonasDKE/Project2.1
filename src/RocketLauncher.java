@@ -1,5 +1,5 @@
 public class RocketLauncher {
-    static int time = 78892380 ;   // 5years 157784630
+    static int time = 110449332 ;   // 5years 157784630
     CelestialBody earth;
     static CelestialBody rocket = new Rocket("rocket",5712, 0, 0, 0, 0, 0, 0);
     protected double speed, startingDistance, newSpeed, counter, brakeDistance;
@@ -84,7 +84,7 @@ public class RocketLauncher {
             lastSpeed = Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY);
             //System.out.println("rocket speed: "+Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY));
             if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) > 3000 && !speedReduced) {
-                rocket.frontThruster(445);
+                rocket.frontThruster(300);
 
                 if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) <= 354) {
                     //System.out.println("limite reached");
@@ -122,9 +122,9 @@ public class RocketLauncher {
 
             if (lastSpeed < Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY)) {
                 System.out.println("bigger");
-                double thrustPower = Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) - lastSpeed;
+                double thrustPower = Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY)- lastSpeed;
                 System.out.println(thrustPower);
-                rocket.frontThruster(Math.abs(thrustPower));
+                rocket.frontThruster(Math.abs(thrustPower/3));
                 speedReduced = true;
             }
         }
