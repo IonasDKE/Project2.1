@@ -1,5 +1,5 @@
 public class RocketLauncher {
-    static int time = 157784630/5;   // 5years 157784630
+    static int time = 63113904 ;   // 5years 157784630
     CelestialBody earth;
     static CelestialBody rocket = new Rocket("rocket",5712, 0, 0, 0, 0, 0, 0);
     protected double speed, startingDistance, newSpeed, counter, brakeDistance;
@@ -37,6 +37,7 @@ public class RocketLauncher {
     private boolean rotate = false;
     boolean speedReduced = false;
     boolean stopIncrease = false;
+    double lastSpeed;
 
     public void reset(){
         speedChanged = false;
@@ -45,10 +46,7 @@ public class RocketLauncher {
         speedReduced = false;
         stopIncrease = false;
         counter = 0;
-        iterationCounter = 0;
     }
-    int iteration, iterationCounter = 0;
-    private double remainder;
     public void checkSpeedAndAngle(){
         counter++;
         //System.out.println("Rocket current speed" + Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY));
@@ -58,7 +56,7 @@ public class RocketLauncher {
         if(Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) < speed && !speedReached){
             rocket.mainThruster(445);
             if (Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY) >= speed){
-                System.out.println("travel speed reached");
+                //System.out.println("travel speed reached");
                 speedReached = true;
             }
         }
@@ -80,37 +78,54 @@ public class RocketLauncher {
             brakeDistance = getDistance();
             rotate = true;
             rocket.setAngle();
-
-            /*
-            double toThrust = Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) - 947;
-            iteration = (int) (toThrust/(445*rocket.mass));
-            remainder = toThrust%(445*rocket.mass);
-            */
         }
 
-        if(rotate && distance <= brakeDistance){
+        if(rotate && distance <= brakeDistance) {
+            lastSpeed = Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY);
             //System.out.println("rocket speed: "+Math.sqrt(rocket.velX*rocket.velX + rocket.velY*rocket.velY));
-            if(Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) > 1000 && !speedReduced) {
-               rocket.mainThruster(445);
-                /*
-                if (iteration > iterationCounter) {
-                    rocket.frontThruster(445);
-                    iterationCounter++;
-                }else if(iterationCounter == iteration){
-                    //rocket.frontThruster(remainder);
-                }
-                */
-                if (Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) <= 947) {
-                    //System.out.println("limite reached");
-                    speedReduced = true;
-                }
-            }else if(Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) > 354 && !speedReduced){
-                rocket.mainThruster(222.5);
+            if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) > 3000 && !speedReduced) {
+                rocket.frontThruster(445);
 
-                if (Math.sqrt(rocket.velX*rocket.velX+ rocket.velY*rocket.velY) <= 947) {
+                if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) <= 354) {
                     //System.out.println("limite reached");
                     speedReduced = true;
                 }
+            } else if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) > 2000 && !speedReduced && Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) < 3000) {
+                rocket.frontThruster(300);
+
+                if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) <= 354) {
+                    //System.out.println("limite reached");
+                    speedReduced = true;
+                }
+            } else if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) > 1000 && !speedReduced && Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) < 2000) {
+                rocket.frontThruster(50);
+
+                if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) <= 354) {
+                    //System.out.println("limite reached");
+                    speedReduced = true;
+                }
+            } else if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) > 500 && !speedReduced && Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) < 1000) {
+                rocket.frontThruster(25);
+
+                if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) <= 354) {
+                    //System.out.println("limite reached");
+                    speedReduced = true;
+                }
+            }else if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) > 500 && !speedReduced) {
+                rocket.frontThruster(10);
+
+                if (Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY) <= 354) {
+                    //System.out.println("limite reached");
+                    speedReduced = true;
+                }
+            }
+
+            if (lastSpeed < Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY)) {
+                System.out.println("bigger");
+                double thrustPower = lastSpeed - Math.sqrt(rocket.velX * rocket.velX + rocket.velY * rocket.velY);
+                System.out.println(thrustPower);
+                rocket.frontThruster(Math.abs(thrustPower));
+                speedReduced = true;
             }
         }
     }
