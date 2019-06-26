@@ -18,7 +18,6 @@ import javafx.scene.input.MouseEvent;
 import java.sql.SQLOutput;
 import java.util.ArrayList;
 import javafx.scene.control.Label;
-import sun.misc.Launcher;
 
 public class gang extends Application{
     int offX=600, offY=600;
